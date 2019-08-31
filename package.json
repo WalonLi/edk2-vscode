@@ -19,6 +19,21 @@
 				"command": "extension.helloWorld",
 				"title": "Hello World"
 			}
+		],
+		"languages": [
+			{
+				"id": "edk2_dsc",
+				"extensions": [
+					".dsc"
+				]
+			}
+		],
+		"grammars": [
+			{
+				"language": "edk2_dsc",
+				"scopeName": "source.edk2_dsc",
+				"path": "./syntaxes/edk2_dsc.tmLanguage.json"
+			}
 		]
 	},
 	"scripts": {

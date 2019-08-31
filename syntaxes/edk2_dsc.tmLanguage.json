@@ -1,0 +1,75 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "source.edk2_dsc",
+	"patterns": [
+		{
+			"include": "#edk2_dsc_color"
+		},
+		{
+			"include": "source.c"
+		}
+	],
+	"repository": {
+		"edk2_dsc_color": {
+			"patterns": [
+				{
+					"name": "variable.parameter.edk2_dsc",
+					"match": "PLATFORM_NAME|PLATFORM_GUID|PLATFORM_VERSION|DSC_SPECIFICATION|OUTPUT_DIRECTORY|SUPPORTED_ARCHITECTURES|BUILD_TARGETS|SKUID_IDENTIFIER|FLASH_DEFINITION|PCD_INFO_GENERATION"
+				},
+				{
+					"name": "variable.parameter.edk2_dsc",
+					"match": "[a-zA-Z0-9/]+.inf"
+				},
+				{
+					"name": "keyword.control.edk2_dsc",
+					"match": "DEFINE|endif|ifdef|ifndef"
+				},
+				{
+					"name": "constant.numeric.edk2_dsc",
+					"match": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+				},
+				{
+					"name": "string.quoted.double.edk2_dsc",
+					"begin": "L\"",
+					"end": "\""
+				},
+				{
+					"begin": "\\[",
+					"end": "\\]",
+					"patterns": [
+						{
+							"name": "string.quoted.double.edk2_dsc",
+							"match": "[a-zA-Z0-9.]+"
+						}
+					]
+				},
+				{
+					"begin": "\\<",
+					"end": "\\>",
+					"patterns": [
+						{
+							"name": "string.quoted.double.edk2_dsc",
+							"match": "[a-zA-Z0-9.]+"
+						}
+					]
+				},
+				{
+					"begin": "\\$\\(",
+					"end": "\\)",
+					"patterns": [
+						{
+							"name": "support.function.edk2_dsc",
+							"match": "[a-zA-Z0-9_]+"
+						}
+					]
+				},
+				{
+					"name": "comment.line.number-sign.edk2_dsc",
+					"begin": "#",
+					"end": "\n"
+				}
+			]
+		}
+	},
+	"scopeName": "source.edk2_dsc"
+}
