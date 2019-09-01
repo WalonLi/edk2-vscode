@@ -10,7 +10,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onLanguage:edk2_dsc"
+		"onLanguage:edk2_dsc",
+		"onLanguage:edk2_dec"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -20,6 +21,12 @@
 				"extensions": [
 					".dsc"
 				]
+			},
+			{
+				"id": "edk2_dec",
+				"extensions": [
+					".dec"
+				]
 			}
 		],
 		"grammars": [
@@ -27,6 +34,11 @@
 				"language": "edk2_dsc",
 				"scopeName": "source.edk2_dsc",
 				"path": "./syntaxes/edk2_dsc.tmLanguage.json"
+			},
+			{
+				"language": "edk2_dec",
+				"scopeName": "source.edk2_dec",
+				"path": "./syntaxes/edk2_dec.tmLanguage.json"
 			}
 		]
 	},
