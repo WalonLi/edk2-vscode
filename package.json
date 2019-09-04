@@ -3,6 +3,7 @@
 	"displayName": "edk2-vscode",
 	"description": "",
 	"version": "0.0.1",
+	"publisher": "walonli",
 	"engines": {
 		"vscode": "^1.37.0"
 	},
@@ -59,5 +60,10 @@
 		"typescript": "^3.3.1",
 		"tslint": "^5.12.1",
 		"vscode-test": "^1.0.2"
-	}
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/WalonLi/edk2-vscode.git"
+	},
+	"homepage": "https://github.com/WalonLi/edk2-vscode/blob/master/README.md"
 }
