@@ -12,7 +12,8 @@
 	],
 	"activationEvents": [
 		"onLanguage:edk2_dsc",
-		"onLanguage:edk2_dec"
+		"onLanguage:edk2_dec",
+		"onLanguage:edk2_inf"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -28,6 +29,12 @@
 				"extensions": [
 					".dec"
 				]
+			},
+			{
+				"id": "edk2_inf",
+				"extensions": [
+					".inf"
+				]
 			}
 		],
 		"grammars": [
@@ -40,6 +47,11 @@
 				"language": "edk2_dec",
 				"scopeName": "source.edk2_dec",
 				"path": "./syntaxes/edk2_dec.tmLanguage.json"
+			},
+			{
+				"language": "edk2_inf",
+				"scopeName": "source.edk2_inf",
+				"path": "./syntaxes/edk2_inf.tmLanguage.json"
 			}
 		]
 	},

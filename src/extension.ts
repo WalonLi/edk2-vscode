@@ -63,6 +63,37 @@ class Edk2DecProvider implements vscode.DefinitionProvider {
 	}
 }
 
+class Edk2InfProvider implements vscode.DefinitionProvider {
+	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
+		// check destination file.
+		let dest = document.lineAt(position).text.replace(new RegExp(/^\s*/g), '')
+												.replace(new RegExp(/#.*/g), '')
+												.replace(new RegExp(/[\s]*$/g), '');
+
+		// console.log(dest);
+		if (dest.match(/[a-zA-Z0-9\s]+\.[a-zA-Z0-9\s]+/g)) {
+			let file_extension = dest.replace(/^[a-zA-Z0-9\s\/]+/g, '');
+			// console.log('extension ' + file_extension);
+			if (file_extension.match('.dec')) {
+				let root_path = vscode.workspace.rootPath + '/';
+				if (fs.existsSync(root_path+dest)) {
+					return new vscode.Location(vscode.Uri.file(root_path+dest), new vscode.Position(0, 0));
+				}
+			} else {
+				let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9.]*$/g, '');
+				// console.log(parent_path+dest);
+				if (fs.existsSync(parent_path+dest)) {
+					return new vscode.Location(vscode.Uri.file(parent_path+dest), new vscode.Position(0, 0));
+				}
+			}
+		} else {
+			let table = dest.replace(/\s/g, '').split('=');
+			
+			// console.log(table);
+			// TO-DO: Jump to C file.
+		}
+	}
+}
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -87,6 +118,7 @@ export function activate(context: vscode.ExtensionContext) {
 	*/
 	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_dsc'}, new Edk2DscProvider());
 	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_dec'}, new Edk2DecProvider());
+	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_inf'}, new Edk2InfProvider());
 }
 
 // this method is called when your extension is deactivated
