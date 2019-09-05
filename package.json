@@ -31,9 +31,28 @@
 				]
 			},
 			{
+				"id": "edk2_fdf",
+				"extensions": [
+					".fdf"
+				]
+			},
+			{
 				"id": "edk2_inf",
 				"extensions": [
 					".inf"
+				]
+			},
+			{
+				"id": "edk2_uni",
+				"extensions": [
+					".uni"
+				]
+			},
+			{
+				"id": "edk2_vfr",
+				"extensions": [
+					".vfr",
+					".hfr"
 				]
 			}
 		],
@@ -49,9 +68,24 @@
 				"path": "./syntaxes/edk2_dec.tmLanguage.json"
 			},
 			{
+				"language": "edk2_fdf",
+				"scopeName": "source.edk2_fdf",
+				"path": "./syntaxes/edk2_fdf.tmLanguage.json"
+			},
+			{
 				"language": "edk2_inf",
 				"scopeName": "source.edk2_inf",
 				"path": "./syntaxes/edk2_inf.tmLanguage.json"
+			},
+			{
+				"language": "edk2_uni",
+				"scopeName": "source.edk2_uni",
+				"path": "./syntaxes/edk2_uni.tmLanguage.json"
+			},
+			{
+				"language": "edk2_vfr",
+				"scopeName": "source.edk2_vfr",
+				"path": "./syntaxes/edk2_vfr.tmLanguage.json"
 			}
 		]
 	},

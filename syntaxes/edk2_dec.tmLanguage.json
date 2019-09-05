@@ -13,7 +13,7 @@
 		"edk2_dec_color": {
 			"patterns": [
 				{
-					"name": "variable.parameter.edk2_dec",
+					"name": "variable.language.edk2_dec",
 					"match": "PACKAGE_NAME|PACKAGE_GUID|PACKAGE_VERSION|PACKAGE_UNI_FILE|DEC_SPECIFICATION"
 				},
 				{

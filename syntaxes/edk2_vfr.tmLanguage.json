@@ -1,0 +1,44 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "source.edk2_vfr",
+	"patterns": [
+		{
+			"include": "#edk2_vfr_color"
+		},
+		{
+			"include": "source.c"
+		}
+	],
+	"repository": {
+		"edk2_vfr_color": {
+			"patterns": [
+				{
+					"name": "variable.language.edk2_vfr",
+					"match": "endformset|formset|formset|subtitle|title|help|varstore|name|classguid|guid|formid|form|prompt|flags|key|endform|text|label|string"
+				},
+				{
+					"name": "variable.language.edk2_vfr",
+					"match": "minsize|maxsize|endstring|numeric|endnumeric|step|minimum|maximum|oneof|endoneof|option|suppressif|goto|varid"
+				},
+				{
+					"name": "support.function.edk2_vfr",
+					"match": "INTERACTIVE"
+				},
+				{
+					"name": "variable.parameter.edk2_vfr",
+					"match": "[a-zA-Z0-9/]+\\.[a-zA-Z]+$"
+				},
+				{
+					"name": "constant.numeric.edk2_vfr",
+					"match": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+				},
+				{
+					"name": "string.quoted.double.edk2_vfr",
+					"begin": "L\"",
+					"end": "\""
+				}
+			]
+		}
+	},
+	"scopeName": "source.edk2_vfr"
+}

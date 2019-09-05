@@ -1,0 +1,83 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "source.edk2_fdf",
+	"patterns": [
+		{
+			"include": "#edk2_fdf_color"
+		},
+		{
+			"include": "source.c"
+		}
+	],
+	"repository": {
+		"edk2_fdf_color": {
+			"patterns": [
+				{
+					"name": "variable.language.edk2_fdf",
+					"match": "BaseAddress|Size|ErasePolarity|BlockSize|NumBlocks|FV|DATA"
+				},
+				{
+					"name": "variable.language.edk2_fdf",
+					"match": "FvAlignment|ERASE_POLARITY|MEMORY_MAPPED|STICKY_WRITE|LOCK_CAP|LOCK_STATUS|WRITE_DISABLED_CAP|WRITE_ENABLED_CAP|WRITE_STATUS"
+				},
+				{
+					"name": "variable.language.edk2_fdf",
+					"match": "WRITE_LOCK_CAP|WRITE_LOCK_STATUS|READ_DISABLED_CAP|READ_ENABLED_CAP|READ_STATUS|READ_LOCK_CAP|READ_LOCK_STATUS|FvNameGuid"
+				},
+				{
+					"name": "variable.parameter.edk2_fdf",
+					"match": "[a-zA-Z0-9/]+\\.[a-zA-Z]+$"
+				},
+				{
+					"name": "keyword.control.edk2_fdf",
+					"match": "DEFINE|endif|ifdef|ifndef"
+				},
+				{
+					"name": "constant.numeric.edk2_fdf",
+					"match": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+				},
+				{
+					"name": "string.quoted.double.edk2_fdf",
+					"begin": "L\"",
+					"end": "\""
+				},
+				{
+					"begin": "\\[",
+					"end": "\\]",
+					"patterns": [
+						{
+							"name": "string.quoted.double.edk2_fdf",
+							"match": "[a-zA-Z0-9.]+"
+						}
+					]
+				},
+				{
+					"begin": "\\<",
+					"end": "\\>",
+					"patterns": [
+						{
+							"name": "string.quoted.double.edk2_fdf",
+							"match": "[a-zA-Z0-9.]+"
+						}
+					]
+				},
+				{
+					"begin": "\\$\\(",
+					"end": "\\)",
+					"patterns": [
+						{
+							"name": "support.function.edk2_fdf",
+							"match": "[a-zA-Z0-9_]+"
+						}
+					]
+				},
+				{
+					"name": "comment.line.number-sign.edk2_fdf",
+					"begin": "#",
+					"end": "\n"
+				}
+			]
+		}
+	},
+	"scopeName": "source.edk2_fdf"
+}

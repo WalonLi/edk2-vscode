@@ -13,7 +13,7 @@
 		"edk2_dsc_color": {
 			"patterns": [
 				{
-					"name": "variable.parameter.edk2_dsc",
+					"name": "variable.language.edk2_dsc",
 					"match": "PLATFORM_NAME|PLATFORM_GUID|PLATFORM_VERSION|DSC_SPECIFICATION|OUTPUT_DIRECTORY|SUPPORTED_ARCHITECTURES|BUILD_TARGETS|SKUID_IDENTIFIER|FLASH_DEFINITION|PCD_INFO_GENERATION"
 				},
 				{

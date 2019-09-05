@@ -1,6 +1,6 @@
 {
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-	"name": "source.edk2_dec",
+	"name": "source.edk2_inf",
 	"patterns": [
 		{
 			"include": "#edk2_inf_color"
@@ -13,7 +13,7 @@
 		"edk2_inf_color": {
 			"patterns": [
 				{
-					"name": "variable.parameter.edk2_inf",
+					"name": "variable.language.edk2_inf",
 					"match": "INF_VERSION|BASE_NAME|FILE_GUID|MODULE_TYPE|VERSION_STRING|ENTRY_POINT|MODULE_UNI_FILE|LIBRARY_CLASS"
 				},
 				{
