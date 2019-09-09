@@ -18,7 +18,7 @@
 				},
 				{
 					"name": "variable.parameter.edk2_dec",
-					"match": "[a-zA-Z0-9/]+.h$"
+					"match": "[a-zA-Z0-9_/]+.h"
 				},
 				{
 					"name": "keyword.control.edk2_dec",

@@ -11,6 +11,7 @@
 		"Other"
 	],
 	"activationEvents": [
+		"onLanguage:edk2_fdf",
 		"onLanguage:edk2_dsc",
 		"onLanguage:edk2_dec",
 		"onLanguage:edk2_inf"

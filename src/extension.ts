@@ -3,21 +3,38 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 
+
+class Edk2FdfProvider implements vscode.DefinitionProvider {
+	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
+		let dest = document.lineAt(position).text.replace(/#.*/g, '')		// comments
+												.replace(/^\s*/g, '')		// front blank
+												.replace(/[\s]*$/g, '');	// tail blank
+		// Check INF prefix
+		if (dest.match(/^INF[a-zA-Z0-9\s]+/g)) {
+			if (vscode.workspace.workspaceFolders) {
+				dest = vscode.workspace.workspaceFolders[0].uri.fsPath + '/' + dest.replace(/^INF[\s]+/g, '');
+				console.log(dest);
+				if (fs.existsSync(dest)) {
+					return new vscode.Location(vscode.Uri.file(dest), new vscode.Position(0, 0));
+				}
+			}
+		}
+	}
+}
+
 class Edk2DscProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
-		/*
-		console.log('fileName: ' + document.uri.fsPath);
-		console.log('workDir: ' + path.dirname(document.uri.fsPath),);
-		console.log('word: ' + document.getText(document.getWordRangeAtPosition(position)));
-		console.log('line: ' + document.lineAt(position).text);
-		console.log(vscode.workspace.rootPath);
-		*/
-		let dest = document.lineAt(position).text.replace(new RegExp(/^\s*/g), '')
-												.replace(new RegExp(/[\s\{\}]*$/g), '')
-												.replace(new RegExp(/[a-zA-Z0-9\s]+\|/g), '');
-		dest = vscode.workspace.rootPath + '/' + dest;
-		if (fs.existsSync(dest)) {
-			return new vscode.Location(vscode.Uri.file(dest), new vscode.Position(0, 0));
+
+
+		let dest = document.lineAt(position).text.replace(/#.*/g, '')				// comments
+												.replace(/^\s*/g, '')				// front blank
+												.replace(/[\s\{\}]*$/g, '')			// tail "{", "}"" and blank
+												.replace(/[a-zA-Z0-9\s]+\|/g, '');	// front "|" and blank
+		if (vscode.workspace.workspaceFolders) {
+			dest = vscode.workspace.workspaceFolders[0].uri.fsPath + '/' + dest;
+			if (fs.existsSync(dest)) {
+				return new vscode.Location(vscode.Uri.file(dest), new vscode.Position(0, 0));
+			}
 		}
 	}
 }
@@ -25,9 +42,10 @@ class Edk2DscProvider implements vscode.DefinitionProvider {
 class Edk2DecProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
 		// check destination file.
-		let dest = document.lineAt(position).text.replace(new RegExp(/^\s*/g), '')
-												.replace(new RegExp(/[\s\{\}]*$/g), '')
-												.replace(new RegExp(/[a-zA-Z0-9\s]+\|/g), '');
+		let dest = document.lineAt(position).text.replace(/#.*/g, '')				// comments
+												.replace(/^\s*/g, '')				// front blank	
+												.replace(/[\s\{\}]*$/g, '')			// tail "{", "}"" and blank
+												.replace(/[a-zA-Z0-9\s]+\|/g, '');	// front "|" and blank
 		if (!dest.substring(dest.length-2).match('.h')) {
 			return;
 		}
@@ -66,18 +84,20 @@ class Edk2DecProvider implements vscode.DefinitionProvider {
 class Edk2InfProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
 		// check destination file.
-		let dest = document.lineAt(position).text.replace(new RegExp(/^\s*/g), '')
-												.replace(new RegExp(/#.*/g), '')
-												.replace(new RegExp(/[\s]*$/g), '');
+		let dest = document.lineAt(position).text.replace(/#.*/g, '')		// comments
+												.replace(/^\s*/g, '')		// front blank
+												.replace(/[\s]*$/g, '');	// tail blank	
 
 		// console.log(dest);
 		if (dest.match(/[a-zA-Z0-9\s]+\.[a-zA-Z0-9\s]+/g)) {
 			let file_extension = dest.replace(/^[a-zA-Z0-9\s\/]+/g, '');
 			// console.log('extension ' + file_extension);
 			if (file_extension.match('.dec')) {
-				let root_path = vscode.workspace.rootPath + '/';
-				if (fs.existsSync(root_path+dest)) {
-					return new vscode.Location(vscode.Uri.file(root_path+dest), new vscode.Position(0, 0));
+				if (vscode.workspace.workspaceFolders) {
+					let root_path = vscode.workspace.workspaceFolders[0].uri.fsPath + '/';
+					if (fs.existsSync(root_path+dest)) {
+						return new vscode.Location(vscode.Uri.file(root_path+dest), new vscode.Position(0, 0));
+					}
 				}
 			} else {
 				let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9.]*$/g, '');
@@ -90,7 +110,7 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 			let table = dest.replace(/\s/g, '').split('=');
 			
 			// console.log(table);
-			// TO-DO: Jump to C file.
+			// TO-DO: Jump to C entry point.
 		}
 	}
 }
@@ -116,6 +136,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(disposable);
 	*/
+	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_fdf'}, new Edk2FdfProvider());
 	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_dsc'}, new Edk2DscProvider());
 	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_dec'}, new Edk2DecProvider());
 	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_inf'}, new Edk2InfProvider());
