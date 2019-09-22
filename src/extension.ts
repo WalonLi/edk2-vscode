@@ -2,7 +2,9 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as fs from 'fs';
+import * as rd from 'readline';
 
+let associate_files:Array<string> = [];
 
 class Edk2FdfProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
@@ -53,7 +55,7 @@ class Edk2DecProvider implements vscode.DefinitionProvider {
 		//
 		// TO-DO: Should parse DEC only once when opening *.dec.
 		//
-		let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9.]*$/g, '');
+		let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
 		// console.log(parent_path);
 
 		let directory = [parent_path + dest];
@@ -100,19 +102,72 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 					}
 				}
 			} else {
-				let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9.]*$/g, '');
+				let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
 				// console.log(parent_path+dest);
-				if (fs.existsSync(parent_path+dest)) {
+				if (fs.existsSync(parent_path + dest)) {
 					return new vscode.Location(vscode.Uri.file(parent_path+dest), new vscode.Position(0, 0));
 				}
 			}
 		} else {
 			let table = dest.replace(/\s/g, '').split('=');
 			
-			// console.log(table);
+			
 			// TO-DO: Jump to C entry point.
+			if (table.length === 2 && table[0].match('ENTRY_POINT') && associate_files.length > 0) {
+				let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
+				for (let iterator of associate_files) {
+					if (!fs.existsSync(parent_path + iterator)) {
+						continue;
+					}
+					console.log(parent_path + iterator);
+					let reader = rd.createInterface(fs.createReadStream(parent_path + iterator));
+					let reg = new RegExp('.*' + table[1] + '.*');
+					let line = 1;
+					let taget = line;
+					// console.log(reg);
+					reader.on("line", (content: string) => {
+						// console.log(l);
+						if (content.match(reg)) {
+							console.log('match!!!', content, parent_path + iterator);
+							//TODO...
+							return new vscode.Location(vscode.Uri.file(parent_path + iterator), new vscode.Position(line, 0));
+						}
+						line++;
+					});
+					reader.on("close", () => {
+						console.log('close!!', line);
+						
+					});
+					
+				}
+			}
+
 		}
 	}
+}
+
+function openFileHandler (file: vscode.TextDocument) {
+	associate_files = [];
+
+	let file_extension = file.uri.fsPath.substring(file.uri.fsPath.length-4);
+	if (file_extension.match('.inf')) {
+		
+		for (let i = 0; i <= file.lineCount; i++) {
+			if (file.lineAt(i).text === '[Sources]') {
+				while (++i <= file.lineCount && file.lineAt(i).text[0] !== '[') {
+					let content = file.lineAt(i).text.trim();
+					if (content.length > 0) {
+						associate_files.push(content);
+					}
+				}
+				break;
+			}
+		}
+		
+	}
+
+	// console.log(associate_files);
+	return;
 }
 
 // this method is called when your extension is activated
@@ -140,6 +195,10 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_dsc'}, new Edk2DscProvider());
 	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_dec'}, new Edk2DecProvider());
 	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_inf'}, new Edk2InfProvider());
+	vscode.workspace.onDidOpenTextDocument((file) => {openFileHandler(file);});
+
+	// vscode.workspace.registerTextDocumentContentProvider({scheme: 'file', language: 'edk2_inf'}, new Edk2InfOpenProvider());
+	
 }
 
 // this method is called when your extension is deactivated
