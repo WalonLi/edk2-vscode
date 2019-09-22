@@ -14,7 +14,7 @@
 			"patterns": [
 				{
 					"name": "variable.language.edk2_inf",
-					"match": "INF_VERSION|BASE_NAME|FILE_GUID|MODULE_TYPE|VERSION_STRING|ENTRY_POINT|MODULE_UNI_FILE|LIBRARY_CLASS"
+					"match": "INF_VERSION|BASE_NAME|FILE_GUID|MODULE_TYPE|VERSION_STRING|ENTRY_POINT|MODULE_UNI_FILE|LIBRARY_CLASS|UNLOAD_IMAGE|UEFI_HII_RESOURCE_SECTION"
 				},
 				{
 					"name": "variable.language.edk2_inf",
@@ -22,15 +22,11 @@
 				},
 				{
 					"name": "variable.language.edk2_inf",
-					"match": "SEC|DXE_DRIVER|DXE_RUNTIME_DRIVER|DXE_SAL_DRIVER|DXE_SMM_DRIVER|SMM_CORE|UEFI_APPLICATION|UEFI_DRIVER"
+					"match": "SEC|DXE_DRIVER|DXE_RUNTIME_DRIVER|DXE_SAL_DRIVER|DXE_SMM_DRIVER|SMM_CORE|UEFI_APPLICATION|UEFI_DRIVER|USER_DEFINED"
 				},
 				{
 					"name": "variable.parameter.edk2_inf",
 					"match": "[a-zA-Z0-9_/]+\\.[a-zA-Z]+"
-				},
-				{
-					"name": "keyword.control.edk2_inf",
-					"match": "DEFINE|endif|ifdef|ifndef"
 				},
 				{
 					"name": "constant.numeric.edk2_inf",
