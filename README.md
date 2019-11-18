@@ -1,12 +1,12 @@
 # edk2-vscode
 ## Develop smoothly EDKII/UEFI
 
-* Adds **FDF** syntax highligh and destionation
-* Adds **DSC** syntax highligh and destionation
-* Adds **DEC** syntax highligh and destionation
-* Adds **INF** syntax highligh and destionation
-* Adds **UNI** syntax highligh
-* Adds **VFR** syntax highligh
+* Add **FDF** syntax highlight and destionation
+* Add **DSC** syntax highlight and destionation
+* Add **DEC** syntax highlight and destionation
+* Add **INF** syntax highlight and destionation
+* Add **UNI** syntax highlight
+* Add **VFR** syntax highlight
 
 
 ### Known Issue
