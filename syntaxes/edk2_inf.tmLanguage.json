@@ -25,6 +25,10 @@
 					"match": "SEC|DXE_DRIVER|DXE_RUNTIME_DRIVER|DXE_SAL_DRIVER|DXE_SMM_DRIVER|SMM_CORE|UEFI_APPLICATION|UEFI_DRIVER|USER_DEFINED"
 				},
 				{
+					"name": "variable.language.edk2_inf",
+					"match": "ENTRY_POINT|UNLOAD_IMAGE|CONSTRUCTOR|DESTRUCTOR"
+				},
+				{
 					"name": "variable.parameter.edk2_inf",
 					"match": "[a-zA-Z0-9_/]+\\.[a-zA-Z]+"
 				},

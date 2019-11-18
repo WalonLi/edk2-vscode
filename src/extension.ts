@@ -109,36 +109,26 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 				}
 			}
 		} else {
+			let keywords = ['ENTRY_POINT', 'UNLOAD_IMAGE', 'CONSTRUCTOR', 'DESTRUCTOR'];
 			let table = dest.replace(/\s/g, '').split('=');
 			
-			
-			// TO-DO: Jump to C entry point.
-			if (table.length === 2 && table[0].match('ENTRY_POINT') && associate_files.length > 0) {
+			// Jump to C function. 
+			if (table.length === 2 && associate_files.length > 0 && keywords.includes(table[0])) {
+				// table[0] = keywords, table[1] = function name;
 				let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
+				console.log(parent_path);
 				for (let iterator of associate_files) {
 					if (!fs.existsSync(parent_path + iterator)) {
 						continue;
 					}
-					console.log(parent_path + iterator);
-					let reader = rd.createInterface(fs.createReadStream(parent_path + iterator));
-					let reg = new RegExp('.*' + table[1] + '.*');
-					let line = 1;
-					let taget = line;
-					// console.log(reg);
-					reader.on("line", (content: string) => {
-						// console.log(l);
-						if (content.match(reg)) {
-							console.log('match!!!', content, parent_path + iterator);
-							//TODO...
-							return new vscode.Location(vscode.Uri.file(parent_path + iterator), new vscode.Position(line, 0));
-						}
-						line++;
-					});
-					reader.on("close", () => {
-						console.log('close!!', line);
-						
-					});
 					
+					let reg = new RegExp('.*' + table[1] + '.*');
+					let lines = fs.readFileSync(parent_path + iterator, 'utf8').split('\n');
+					for (let i = 0; i < lines.length; ++i) {
+						if (lines[i].match(reg)) {
+							return new vscode.Location(vscode.Uri.file(parent_path + iterator), new vscode.Position(i, 0));
+						}
+					}
 				}
 			}
 
@@ -147,13 +137,18 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 }
 
 function openFileHandler (file: vscode.TextDocument) {
-	associate_files = [];
-
+	
 	let file_extension = file.uri.fsPath.substring(file.uri.fsPath.length-4);
+	/*
+	if (file_extension.match('.git') || file_extension.match('.svn')) {
+		// Should not parse another plugin...
+		return;
+	}
+	*/
 	if (file_extension.match('.inf')) {
-		
+		associate_files = [];
 		for (let i = 0; i <= file.lineCount; i++) {
-			if (file.lineAt(i).text === '[Sources]') {
+			if (file.lineAt(i).text.toUpperCase().match(/\[SOURCES[a-zA-Z\.]*\]/g)) {
 				while (++i <= file.lineCount && file.lineAt(i).text[0] !== '[') {
 					let content = file.lineAt(i).text.trim();
 					if (content.length > 0) {
