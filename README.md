@@ -7,3 +7,7 @@
 * Adds **INF** syntax highligh and destionation
 * Adds **UNI** syntax highligh
 * Adds **VFR** syntax highligh
+
+
+### Known Issue
+Crossline string is problem for syntax highlight.
