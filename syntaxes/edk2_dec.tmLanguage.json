@@ -19,7 +19,7 @@
 				},
 				{
 					"name": "keyword.control.edk2_dec",
-					"match": "DEFINE|endif|ifdef|ifndef"
+					"match": "DEFINE|(?<=!)endif|(?<=!)ifdef|(?<=!)ifndef|(?<=!)if"
 				},
 				{
 					"name": "constant.numeric.edk2_dec",

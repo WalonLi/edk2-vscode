@@ -4,9 +4,6 @@
 	"patterns": [
 		{
 			"include": "#edk2_dsc_color"
-		},
-		{
-			"include": "source.c"
 		}
 	],
 	"repository": {
@@ -22,15 +19,19 @@
 				},
 				{
 					"name": "keyword.control.edk2_dsc",
-					"match": "DEFINE|endif|ifdef|ifndef"
+					"match": "DEFINE|(?<=!)endif|(?<=!)ifdef|(?<=!)ifndef|(?<=!)if|(?<=!)include"
 				},
 				{
 					"name": "constant.numeric.edk2_dsc",
 					"match": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
 				},
 				{
+					"name": "constant.numeric.edk2_dec",
+					"match": "(?<!\\w)\\.?\\d(?:(?:[0-9a-zA-Z_\\.]|')|(?<=[eEpP])[+-])*"
+				},
+				{
 					"name": "string.quoted.double.edk2_dsc",
-					"begin": "L\"",
+					"begin": "L\"|\"",
 					"end": "\""
 				},
 				{

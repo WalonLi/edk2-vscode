@@ -30,7 +30,7 @@
 				},
 				{
 					"name": "keyword.control.edk2_fdf",
-					"match": "DEFINE|endif|ifdef|ifndef"
+					"match": "DEFINE|(?<=!)endif|(?<=!)ifdef|(?<=!)ifndef|(?<=!)if|(?<=!)include"
 				},
 				{
 					"name": "constant.numeric.edk2_fdf",
