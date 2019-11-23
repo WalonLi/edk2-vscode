@@ -18,7 +18,7 @@
 				},
 				{
 					"name": "variable.parameter.edk2_dsc",
-					"match": "[a-zA-Z0-9_/]+.inf$"
+					"match": "[a-zA-Z0-9_/]+\\.inf"
 				},
 				{
 					"name": "keyword.control.edk2_dsc",

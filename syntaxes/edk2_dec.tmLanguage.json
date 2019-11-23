@@ -4,9 +4,6 @@
 	"patterns": [
 		{
 			"include": "#edk2_dec_color"
-		},
-		{
-			"include": "source.c"
 		}
 	],
 	"repository": {
@@ -18,7 +15,7 @@
 				},
 				{
 					"name": "variable.parameter.edk2_dec",
-					"match": "[a-zA-Z0-9_/]+.h$"
+					"match": "[a-zA-Z0-9_/]+\\.h"
 				},
 				{
 					"name": "keyword.control.edk2_dec",
@@ -29,8 +26,12 @@
 					"match": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
 				},
 				{
+					"name": "constant.numeric.edk2_dec",
+					"match": "(?<!\\w)\\.?\\d(?:(?:[0-9a-zA-Z_\\.]|')|(?<=[eEpP])[+-])*"
+				},
+				{
 					"name": "string.quoted.double.edk2_dec",
-					"begin": "L\"",
+					"begin": "L\"|\"",
 					"end": "\""
 				},
 				{
