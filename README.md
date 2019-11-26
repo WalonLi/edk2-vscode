@@ -9,8 +9,6 @@
 * Add **VFR** syntax highlight
 
 
-### Known Issue
-Crossline string is problem for syntax highlight.
 
 ```
 GNU GENERAL PUBLIC LICENSE

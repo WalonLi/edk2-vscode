@@ -14,15 +14,19 @@
 			"patterns": [
 				{
 					"name": "variable.language.edk2_vfr",
-					"match": "endformset|formset|formset|subtitle|title|help|varstore|name|classguid|guid|formid|form|prompt|flags|key|endform|text|label|string"
+					"match": "((?<!\\w)endformset|formset|formset|subtitle|title|class|subclass|help|varstore|name|classguid|guid|formid|form|prompt|flags|key|endform|text|label|string)(?!\\w)"
 				},
 				{
 					"name": "variable.language.edk2_vfr",
-					"match": "minsize|maxsize|endstring|numeric|endnumeric|step|minimum|maximum|oneof|endoneof|option|suppressif|goto|varid"
+					"match": "((?<!\\w)minsize|maxsize|endstring|numeric|endnumeric|step|minimum|maximum|oneof|endoneof|option|goto|varid|default|checkbox|endcheckbox|date|year|month|day|enddate|time|hour|minute|second|endtime)(?!\\w)"
+				},
+				{
+					"name": "variable.language.edk2_vfr",
+					"match": "((?<!\\w)suppressif|grayoutif|inconsistentif|endif|ideqval|ideqvallist)(?!\\w)"
 				},
 				{
 					"name": "support.function.edk2_vfr",
-					"match": "INTERACTIVE"
+					"match": "((?<!\\w)INTERACTIVE|DEFAULT|MANUFACTURING|RESET_REQUIRED|CHECKBOX_DEFAULT)(?!\\w)"
 				},
 				{
 					"name": "variable.parameter.edk2_vfr",

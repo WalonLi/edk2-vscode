@@ -11,7 +11,7 @@
 			"patterns": [
 				{
 					"name": "variable.language.edk2_dec",
-					"match": "PACKAGE_NAME|PACKAGE_GUID|PACKAGE_VERSION|PACKAGE_UNI_FILE|DEC_SPECIFICATION"
+					"match": "((?<!\\w)PACKAGE_NAME|PACKAGE_GUID|PACKAGE_VERSION|PACKAGE_UNI_FILE|DEC_SPECIFICATION)(?!\\w)"
 				},
 				{
 					"name": "variable.parameter.edk2_dec",
@@ -19,7 +19,7 @@
 				},
 				{
 					"name": "keyword.control.edk2_dec",
-					"match": "DEFINE|(?<=!)endif|(?<=!)ifdef|(?<=!)ifndef|(?<=!)if"
+					"match": "((?<!\\w)DEFINE)(?!\\w)|(?<=!)(if|endif|ifdef|ifndef|include|else)"
 				},
 				{
 					"name": "constant.numeric.edk2_dec",
@@ -28,6 +28,14 @@
 				{
 					"name": "constant.numeric.edk2_dec",
 					"match": "(?<!\\w)\\.?\\d(?:(?:[0-9a-zA-Z_\\.]|')|(?<=[eEpP])[+-])*"
+				},
+				{
+					"name": "entity.name.type.edk2_dec",
+					"match": "((?<!\\w)(UINT64|UINT32|UINT16|UINT8|UINTN|BOOLEAN|VOID))(?!\\w)"
+				},
+				{
+					"name": "constant.language.edk2_dec",
+					"match": "((?<!\\w)TRUE|FALSE|NULL)(?!\\w)"
 				},
 				{
 					"name": "string.quoted.double.edk2_dec",

@@ -4,9 +4,6 @@
 	"patterns": [
 		{
 			"include": "#edk2_inf_color"
-		},
-		{
-			"include": "source.c"
 		}
 	],
 	"repository": {
@@ -14,19 +11,11 @@
 			"patterns": [
 				{
 					"name": "variable.language.edk2_inf",
-					"match": "INF_VERSION|BASE_NAME|FILE_GUID|MODULE_TYPE|VERSION_STRING|ENTRY_POINT|MODULE_UNI_FILE|LIBRARY_CLASS|UNLOAD_IMAGE|UEFI_HII_RESOURCE_SECTION"
+					"match": "((?<!\\w)(INF_VERSION|BASE_NAME|FILE_GUID|MODULE_TYPE|VERSION_STRING|ENTRY_POINT|MODULE_UNI_FILE|LIBRARY_CLASS|UNLOAD_IMAGE|UEFI_HII_RESOURCE_SECTION|CONSTRUCTOR|DESTRUCTOR))(?!\\w)"
 				},
 				{
 					"name": "variable.language.edk2_inf",
-					"match": "DXE_CORE|PEIM|PEI_CORE"
-				},
-				{
-					"name": "variable.language.edk2_inf",
-					"match": "SEC|DXE_DRIVER|DXE_RUNTIME_DRIVER|DXE_SAL_DRIVER|DXE_SMM_DRIVER|SMM_CORE|UEFI_APPLICATION|UEFI_DRIVER|USER_DEFINED"
-				},
-				{
-					"name": "variable.language.edk2_inf",
-					"match": "ENTRY_POINT|UNLOAD_IMAGE|CONSTRUCTOR|DESTRUCTOR"
+					"match": "((?<!\\w)(DXE_CORE|PEIM|PEI_CORE|SEC|DXE_DRIVER|DXE_RUNTIME_DRIVER|DXE_SAL_DRIVER|DXE_SMM_DRIVER|SMM_CORE|UEFI_APPLICATION|UEFI_DRIVER|USER_DEFINED))(?!\\w)"
 				},
 				{
 					"name": "variable.parameter.edk2_inf",
@@ -37,8 +26,12 @@
 					"match": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
 				},
 				{
+					"name": "constant.language.edk2_inf",
+					"match": "((?<!\\w)TRUE|FALSE|NULL)(?!\\w)"
+				},
+				{
 					"name": "string.quoted.double.edk2_inf",
-					"begin": "L\"",
+					"begin": "L\"|\"",
 					"end": "\""
 				},
 				{

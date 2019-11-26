@@ -11,7 +11,7 @@
 			"patterns": [
 				{
 					"name": "variable.language.edk2_dsc",
-					"match": "PLATFORM_NAME|PLATFORM_GUID|PLATFORM_VERSION|DSC_SPECIFICATION|OUTPUT_DIRECTORY|SUPPORTED_ARCHITECTURES|BUILD_TARGETS|SKUID_IDENTIFIER|FLASH_DEFINITION|PCD_INFO_GENERATION"
+					"match": "((?<!\\w)PLATFORM_NAME|PLATFORM_GUID|PLATFORM_VERSION|DSC_SPECIFICATION|OUTPUT_DIRECTORY|SUPPORTED_ARCHITECTURES|BUILD_TARGETS|SKUID_IDENTIFIER|FLASH_DEFINITION|PCD_INFO_GENERATION)(?!\\w)"
 				},
 				{
 					"name": "variable.parameter.edk2_dsc",
@@ -19,15 +19,23 @@
 				},
 				{
 					"name": "keyword.control.edk2_dsc",
-					"match": "DEFINE|(?<=!)endif|(?<=!)ifdef|(?<=!)ifndef|(?<=!)if|(?<=!)include"
+					"match": "((?<!\\w)DEFINE)(?!\\w)|(?<=!)(if|endif|ifdef|ifndef|include|else)"
 				},
 				{
 					"name": "constant.numeric.edk2_dsc",
 					"match": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
 				},
 				{
-					"name": "constant.numeric.edk2_dec",
+					"name": "constant.numeric.edk2_dsc",
 					"match": "(?<!\\w)\\.?\\d(?:(?:[0-9a-zA-Z_\\.]|')|(?<=[eEpP])[+-])*"
+				},
+				{
+					"name": "entity.name.type.edk2_dsc",
+					"match": "((?<!\\w)(UINT64|UINT32|UINT16|UINT8|UINTN|BOOLEAN|VOID))(?!\\w)"
+				},
+				{
+					"name": "constant.language.edk2_dsc",
+					"match": "((?<!\\w)TRUE|FALSE|NULL)(?!\\w)"
 				},
 				{
 					"name": "string.quoted.double.edk2_dsc",
