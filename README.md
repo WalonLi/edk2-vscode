@@ -1,13 +1,19 @@
 # edk2-vscode
-## Develop smoothly EDKII/UEFI
+edk2-vscode is a plugin of vscode for supporting edk2 files association.
 
-* Add **FDF** syntax highlight and destionation
-* Add **DSC** syntax highlight and destionation
-* Add **DEC** syntax highlight and destionation
-* Add **INF** syntax highlight and destionation
-* Add **UNI** syntax highlight
-* Add **VFR** syntax highlight
+## Syntax Highlight
+* **FDF** Syntax
+* **DSC** Syntax
+* **DEC** Syntax
+* **INF** Syntax
+* **UNI** Syntax
+* **VFR** Syntax
 
+## Definition Hotkey
+* **FDF** File definition hotkey
+* **DSC** File definition hotkey
+* **DEC** File definition hotkey
+* **INF** Function/File definition hoteky
 
 
 ```
