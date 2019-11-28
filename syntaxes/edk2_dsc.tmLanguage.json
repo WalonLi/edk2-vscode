@@ -11,7 +11,11 @@
 			"patterns": [
 				{
 					"name": "variable.language.edk2_dsc",
-					"match": "((?<!\\w)PLATFORM_NAME|PLATFORM_GUID|PLATFORM_VERSION|DSC_SPECIFICATION|OUTPUT_DIRECTORY|SUPPORTED_ARCHITECTURES|BUILD_TARGETS|SKUID_IDENTIFIER|FLASH_DEFINITION|PCD_INFO_GENERATION)(?!\\w)"
+					"match": "((?<!\\w)DSC_SPECIFICATION|PLATFORM_GUID|PLATFORM_VERSION|PLATFORM_NAME|SKUID_IDENTIFIER|SUPPORTED_ARCHITECTURES|BUILD_TARGETS)(?!\\w)"
+				},
+				{
+					"name": "variable.language.edk2_dsc",
+					"match": "((?<!\\w)OUTPUT_DIRECTORY|FLASH_DEFINITION|BUILD_NUMBER|FIX_LOAD_TOP_MEMORY_ADDRESS|TIME_STAMP_FILE|DEFINE|RFC_LANGUAGES|ISO_LANGUAGES|VPD_TOOL_GUID|PCD_INFO_GENERATION|PREBUILD|POSTBUILD)(?!\\w)"
 				},
 				{
 					"name": "variable.parameter.edk2_dsc",
@@ -19,7 +23,7 @@
 				},
 				{
 					"name": "keyword.control.edk2_dsc",
-					"match": "((?<!\\w)DEFINE)(?!\\w)|(?<=!)(if|endif|ifdef|ifndef|include|else)"
+					"match": "(?<=!)(if|endif|ifdef|ifndef|include|else)"
 				},
 				{
 					"name": "constant.numeric.edk2_dsc",

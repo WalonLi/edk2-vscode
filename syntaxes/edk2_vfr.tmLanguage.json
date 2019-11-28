@@ -14,7 +14,7 @@
 			"patterns": [
 				{
 					"name": "variable.language.edk2_vfr",
-					"match": "((?<!\\w)endformset|formset|formset|subtitle|title|class|subclass|help|varstore|name|classguid|guid|formid|form|prompt|flags|key|endform|text|label|string)(?!\\w)"
+					"match": "((?<!\\w)endformset|formset|subtitle|title|class|subclass|help|varstore|name|classguid|guid|formid|form|prompt|flags|key|value|endform|text|label|string|questionid|write|set|cond|map)(?!\\w)"
 				},
 				{
 					"name": "variable.language.edk2_vfr",
@@ -22,7 +22,7 @@
 				},
 				{
 					"name": "variable.language.edk2_vfr",
-					"match": "((?<!\\w)suppressif|grayoutif|inconsistentif|endif|ideqval|ideqvallist)(?!\\w)"
+					"match": "((?<!\\w)suppressif|grayoutif|warningif|inconsistentif|endif|ideqval|ideqvallist)(?!\\w)"
 				},
 				{
 					"name": "support.function.edk2_vfr",
