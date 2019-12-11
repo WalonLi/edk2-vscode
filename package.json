@@ -14,7 +14,8 @@
 		"onLanguage:edk2_fdf",
 		"onLanguage:edk2_dsc",
 		"onLanguage:edk2_dec",
-		"onLanguage:edk2_inf"
+		"onLanguage:edk2_inf",
+		"onLanguage:edk2_vfr"
 	],
 	"main": "./out/extension.js",
 	"contributes": {

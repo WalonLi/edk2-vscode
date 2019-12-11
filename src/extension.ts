@@ -15,7 +15,7 @@ class Edk2FdfProvider implements vscode.DefinitionProvider {
 		if (dest.match(/^INF[a-zA-Z0-9\s]+/g)) {
 			if (vscode.workspace.workspaceFolders) {
 				dest = vscode.workspace.workspaceFolders[0].uri.fsPath + '/' + dest.replace(/^INF[\s]+/g, '');
-				console.log(dest);
+				// console.log(dest);
 				if (fs.existsSync(dest)) {
 					return new vscode.Location(vscode.Uri.file(dest), new vscode.Position(0, 0));
 				}
@@ -116,7 +116,7 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 			if (table.length === 2 && associate_files.length > 0 && keywords.includes(table[0])) {
 				// table[0] = keywords, table[1] = function name;
 				let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
-				console.log(parent_path);
+				// console.log(parent_path);
 				for (let iterator of associate_files) {
 					if (!fs.existsSync(parent_path + iterator)) {
 						continue;
@@ -133,6 +133,23 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 			}
 
 		}
+	}
+}
+
+class Edk2VfrProvider implements vscode.DefinitionProvider {
+	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
+		let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
+		let uni_files = fs.readdirSync(parent_path).filter((value, index, array) => value.match(/[a-zA-Z0-9\s]+\.uni/g));
+		
+		/*
+		let files = fs.readdirSync(parent_path).filter(function(value){
+			return value.match(/[a-zA-Z0-9\s]+\.uni/g);
+		});
+		*/
+		console.log(uni_files);
+		// console.log(vscode.workspace.workspaceFolders);
+		
+		return;
 	}
 }
 
@@ -190,6 +207,7 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_dsc'}, new Edk2DscProvider());
 	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_dec'}, new Edk2DecProvider());
 	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_inf'}, new Edk2InfProvider());
+	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_vfr'}, new Edk2VfrProvider());
 	vscode.workspace.onDidOpenTextDocument((file) => {openFileHandler(file);});
 
 	// vscode.workspace.registerTextDocumentContentProvider({scheme: 'file', language: 'edk2_inf'}, new Edk2InfOpenProvider());
