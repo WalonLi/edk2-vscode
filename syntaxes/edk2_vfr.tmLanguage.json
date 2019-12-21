@@ -14,11 +14,11 @@
 			"patterns": [
 				{
 					"name": "variable.language.edk2_vfr",
-					"match": "((?<!\\w)endformset|formset|subtitle|title|class|subclass|help|varstore|name|classguid|guid|formid|form|prompt|flags|key|value|endform|text|label|string|questionid|write|set|cond|map)(?!\\w)"
+					"match": "((?<!\\w)endformset|formset|subtitle|title|class|subclass|help|varstore|efivarstore|name|classguid|guid|attribute|formid|form|prompt|flags|key|value|endform|text|label|string|questionid|write|set|cond|map)(?!\\w)"
 				},
 				{
 					"name": "variable.language.edk2_vfr",
-					"match": "((?<!\\w)minsize|maxsize|endstring|numeric|endnumeric|step|minimum|maximum|oneof|endoneof|option|goto|varid|default|checkbox|endcheckbox|date|year|month|day|enddate|time|hour|minute|second|endtime)(?!\\w)"
+					"match": "((?<!\\w)minsize|maxsize|endstring|numeric|endnumeric|step|minimum|maximum|oneof|endoneof|option|goto|varid|default|defaultstore|checkbox|endcheckbox|date|year|month|day|enddate|time|hour|minute|second|endtime|timeout)(?!\\w)"
 				},
 				{
 					"name": "variable.language.edk2_vfr",
@@ -30,7 +30,7 @@
 				},
 				{
 					"name": "variable.parameter.edk2_vfr",
-					"match": "[a-zA-Z0-9_/]+\\.[a-zA-Z]+"
+					"match": "[a-zA-Z0-9_]+\\.[a-zA-Z0-9_]+"
 				},
 				{
 					"name": "constant.numeric.edk2_vfr",
