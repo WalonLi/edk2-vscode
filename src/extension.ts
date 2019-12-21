@@ -4,15 +4,15 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as rd from 'readline';
 
-let associate_files:Array<string> = [];
+let associate_files: Array<string> = [];
 
 /*
 */
 class Edk2FdfProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
-		let dest = document.lineAt(position).text.replace(/#.*/g, '')		// comments
-												.replace(/^\s*/g, '')		// front blank
-												.replace(/[\s]*$/g, '');	// tail blank
+		let dest = document.lineAt(position).text.replace(/#.*/g, '')	// comments
+			.replace(/^\s*/g, '')										// front blank
+			.replace(/[\s]*$/g, '');									// tail blank
 		// Check INF prefix
 		if (dest.match(/^INF[a-zA-Z0-9\s]+/g)) {
 			if (vscode.workspace.workspaceFolders) {
@@ -32,10 +32,10 @@ class Edk2DscProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
 
 
-		let dest = document.lineAt(position).text.replace(/#.*/g, '')				// comments
-												.replace(/^\s*/g, '')				// front blank
-												.replace(/[\s\{\}]*$/g, '')			// tail "{", "}"" and blank
-												.replace(/[a-zA-Z0-9\s]+\|/g, '');	// front "|" and blank
+		let dest = document.lineAt(position).text.replace(/#.*/g, '')	// comments
+			.replace(/^\s*/g, '')										// front blank
+			.replace(/[\s\{\}]*$/g, '')									// tail "{", "}"" and blank
+			.replace(/[a-zA-Z0-9\s]+\|/g, '');							// front "|" and blank
 		if (vscode.workspace.workspaceFolders) {
 			dest = vscode.workspace.workspaceFolders[0].uri.fsPath + '/' + dest;
 			if (fs.existsSync(dest)) {
@@ -50,11 +50,11 @@ class Edk2DscProvider implements vscode.DefinitionProvider {
 class Edk2DecProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
 		// check destination file.
-		let dest = document.lineAt(position).text.replace(/#.*/g, '')				// comments
-												.replace(/^\s*/g, '')				// front blank	
-												.replace(/[\s\{\}]*$/g, '')			// tail "{", "}"" and blank
-												.replace(/[a-zA-Z0-9\s]+\|/g, '');	// front "|" and blank
-		if (!dest.substring(dest.length-2).match('.h')) {
+		let dest = document.lineAt(position).text.replace(/#.*/g, '')	// comments
+			.replace(/^\s*/g, '')										// front blank	
+			.replace(/[\s\{\}]*$/g, '')									// tail "{", "}"" and blank
+			.replace(/[a-zA-Z0-9\s]+\|/g, '');							// front "|" and blank
+		if (!dest.substring(dest.length - 2).match('.h')) {
 			return;
 		}
 
@@ -66,7 +66,7 @@ class Edk2DecProvider implements vscode.DefinitionProvider {
 
 		let directory = [parent_path + dest];
 		for (let i = 0; i <= document.lineCount; i++) {
-			let content = document.lineAt(i).text.trim() ;
+			let content = document.lineAt(i).text.trim();
 			if (content.match('\\[Includes\\]')) {
 				for (i += 1; i <= document.lineCount; i++) {
 					let folder = document.lineAt(i).text.trim();
@@ -94,9 +94,9 @@ class Edk2DecProvider implements vscode.DefinitionProvider {
 class Edk2InfProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
 		// check destination file.
-		let dest = document.lineAt(position).text.replace(/#.*/g, '')		// comments
-												.replace(/^\s*/g, '')		// front blank
-												.replace(/[\s]*$/g, '');	// tail blank	
+		let dest = document.lineAt(position).text.replace(/#.*/g, '')	// comments
+			.replace(/^\s*/g, '')										// front blank
+			.replace(/[\s]*$/g, '');									// tail blank	
 
 		// console.log(dest);
 		if (dest.match(/[a-zA-Z0-9\s]+\.[a-zA-Z0-9\s]+/g)) {
@@ -105,21 +105,21 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 			if (file_extension.match('.dec')) {
 				if (vscode.workspace.workspaceFolders) {
 					let root_path = vscode.workspace.workspaceFolders[0].uri.fsPath + '/';
-					if (fs.existsSync(root_path+dest)) {
-						return new vscode.Location(vscode.Uri.file(root_path+dest), new vscode.Position(0, 0));
+					if (fs.existsSync(root_path + dest)) {
+						return new vscode.Location(vscode.Uri.file(root_path + dest), new vscode.Position(0, 0));
 					}
 				}
 			} else {
 				let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
 				// console.log(parent_path+dest);
 				if (fs.existsSync(parent_path + dest)) {
-					return new vscode.Location(vscode.Uri.file(parent_path+dest), new vscode.Position(0, 0));
+					return new vscode.Location(vscode.Uri.file(parent_path + dest), new vscode.Position(0, 0));
 				}
 			}
 		} else {
 			let keywords = ['ENTRY_POINT', 'UNLOAD_IMAGE', 'CONSTRUCTOR', 'DESTRUCTOR'];
 			let table = dest.replace(/\s/g, '').split('=');
-			
+
 			// Jump to C function. 
 			if (table.length === 2 && associate_files.length > 0 && keywords.includes(table[0])) {
 				// table[0] = keywords, table[1] = function name;
@@ -129,7 +129,7 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 					if (!fs.existsSync(parent_path + iterator)) {
 						continue;
 					}
-					
+
 					let reg = new RegExp('.*' + table[1] + '.*');
 					let lines = fs.readFileSync(parent_path + iterator, 'utf8').split('\n');
 					for (let i = 0; i < lines.length; ++i) {
@@ -139,7 +139,6 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 					}
 				}
 			}
-
 		}
 	}
 }
@@ -151,11 +150,11 @@ class Edk2VfrProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
 		// Check STRING_TOKEN expression
 		let word = document.getText(document.getWordRangeAtPosition(position));
-		let reg = new RegExp ('.*' + 'STRING_TOKEN' + '\\s*'+ '\\(' + word + '\\)' + '.*');
+		let reg = new RegExp('.*' + 'STRING_TOKEN' + '\\s*' + '\\(' + word + '\\)' + '.*');
 		if (!document.lineAt(position).text.match(reg)) {
 			return;
 		}
-		
+
 		let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
 		let uni_files = fs.readdirSync(parent_path).filter((value, index, array) => value.match(/[a-zA-Z0-9\s]+\.uni/g));
 		for (let iterator of uni_files) {
@@ -165,7 +164,7 @@ class Edk2VfrProvider implements vscode.DefinitionProvider {
 
 			let lines = fs.readFileSync(parent_path + iterator, 'utf8').split('\n');
 			for (let i = 0; i < lines.length; ++i) {
-				let strings =  lines[i].split(/\s/g);
+				let strings = lines[i].split(/\s/g);
 				if (strings.length >= 2 && strings[1].match(word)) {
 					return new vscode.Location(vscode.Uri.file(parent_path + iterator), new vscode.Position(i, 0));
 				}
@@ -174,9 +173,9 @@ class Edk2VfrProvider implements vscode.DefinitionProvider {
 	}
 }
 
-function openFileHandler (file: vscode.TextDocument) {
-	
-	let file_extension = file.uri.fsPath.substring(file.uri.fsPath.length-4);
+function openFileHandler(file: vscode.TextDocument) {
+
+	let file_extension = file.uri.fsPath.substring(file.uri.fsPath.length - 4);
 	/*
 	if (file_extension.match('.git') || file_extension.match('.svn')) {
 		// Should not parse another plugin...
@@ -196,11 +195,10 @@ function openFileHandler (file: vscode.TextDocument) {
 				break;
 			}
 		}
-		
+
 	}
 
 	// console.log(associate_files);
-	return;
 }
 
 // this method is called when your extension is activated
@@ -224,16 +222,16 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(disposable);
 	*/
-	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_fdf'}, new Edk2FdfProvider());
-	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_dsc'}, new Edk2DscProvider());
-	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_dec'}, new Edk2DecProvider());
-	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_inf'}, new Edk2InfProvider());
-	vscode.languages.registerDefinitionProvider({scheme: 'file', language: 'edk2_vfr'}, new Edk2VfrProvider());
-	vscode.workspace.onDidOpenTextDocument((file) => {openFileHandler(file);});
+	vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_fdf' }, new Edk2FdfProvider());
+	vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_dsc' }, new Edk2DscProvider());
+	vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_dec' }, new Edk2DecProvider());
+	vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_inf' }, new Edk2InfProvider());
+	vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_vfr' }, new Edk2VfrProvider());
+	vscode.workspace.onDidOpenTextDocument((file) => { openFileHandler(file); });
 
 	// vscode.workspace.registerTextDocumentContentProvider({scheme: 'file', language: 'edk2_inf'}, new Edk2InfOpenProvider());
-	
+
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
