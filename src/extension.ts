@@ -6,6 +6,8 @@ import * as rd from 'readline';
 
 let associate_files:Array<string> = [];
 
+/*
+*/
 class Edk2FdfProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
 		let dest = document.lineAt(position).text.replace(/#.*/g, '')		// comments
@@ -24,6 +26,8 @@ class Edk2FdfProvider implements vscode.DefinitionProvider {
 	}
 }
 
+/*
+*/
 class Edk2DscProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
 
@@ -41,6 +45,8 @@ class Edk2DscProvider implements vscode.DefinitionProvider {
 	}
 }
 
+/*
+*/
 class Edk2DecProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
 		// check destination file.
@@ -83,6 +89,8 @@ class Edk2DecProvider implements vscode.DefinitionProvider {
 	}
 }
 
+/*
+*/
 class Edk2InfProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
 		// check destination file.
@@ -136,20 +144,33 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 	}
 }
 
+/*
+	Only support VFR => UNI destination function in same folder
+*/
 class Edk2VfrProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
+		// Check STRING_TOKEN expression
+		let word = document.getText(document.getWordRangeAtPosition(position));
+		let reg = new RegExp ('.*' + 'STRING_TOKEN' + '\\s*'+ '\\(' + word + '\\)' + '.*');
+		if (!document.lineAt(position).text.match(reg)) {
+			return;
+		}
+		
 		let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
 		let uni_files = fs.readdirSync(parent_path).filter((value, index, array) => value.match(/[a-zA-Z0-9\s]+\.uni/g));
-		
-		/*
-		let files = fs.readdirSync(parent_path).filter(function(value){
-			return value.match(/[a-zA-Z0-9\s]+\.uni/g);
-		});
-		*/
-		console.log(uni_files);
-		// console.log(vscode.workspace.workspaceFolders);
-		
-		return;
+		for (let iterator of uni_files) {
+			if (!fs.existsSync(parent_path + iterator)) {
+				continue;
+			}
+
+			let lines = fs.readFileSync(parent_path + iterator, 'utf8').split('\n');
+			for (let i = 0; i < lines.length; ++i) {
+				let strings =  lines[i].split(/\s/g);
+				if (strings.length >= 2 && strings[1].match(word)) {
+					return new vscode.Location(vscode.Uri.file(parent_path + iterator), new vscode.Position(i, 0));
+				}
+			}
+		}
 	}
 }
 
