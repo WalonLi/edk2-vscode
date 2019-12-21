@@ -144,30 +144,34 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 }
 
 /*
-	Only support VFR => UNI destination function in same folder
+	Only support VFR => UNI/H destination function in same folder.
+	Only support UTF8. (Some edk2 files is UCS2(UTF16) format and we don't support so far.)
 */
 class Edk2VfrProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
-		// Check STRING_TOKEN expression
-		let word = document.getText(document.getWordRangeAtPosition(position));
-		let reg = new RegExp('.*' + 'STRING_TOKEN' + '\\s*' + '\\(' + word + '\\)' + '.*');
-		if (!document.lineAt(position).text.match(reg)) {
-			return;
-		}
-
 		let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
-		let uni_files = fs.readdirSync(parent_path).filter((value, index, array) => value.match(/[a-zA-Z0-9\s]+\.uni/g));
-		for (let iterator of uni_files) {
-			if (!fs.existsSync(parent_path + iterator)) {
-				continue;
-			}
-
-			let lines = fs.readFileSync(parent_path + iterator, 'utf8').split('\n');
-			for (let i = 0; i < lines.length; ++i) {
-				let strings = lines[i].split(/\s/g);
-				if (strings.length >= 2 && strings[1].match(word)) {
-					return new vscode.Location(vscode.Uri.file(parent_path + iterator), new vscode.Position(i, 0));
+		let word = document.getText(document.getWordRangeAtPosition(position));
+		let string_token_reg = new RegExp('.*' + 'STRING_TOKEN' + '\\s*' + '\\(' + word + '\\)' + '.*');
+		let header_file_reg = new RegExp('.*' + '\\#include' + '.*');
+		
+		if (document.lineAt(position).text.match(string_token_reg)) {
+			let uni_files = fs.readdirSync(parent_path).filter((value, index, array) => value.match(/[\w]+\.uni/g));
+			for (let iterator of uni_files) {
+				if (!fs.existsSync(parent_path + iterator)) {
+					continue;
 				}
+				let lines = fs.readFileSync(parent_path + iterator, 'utf8').split('\n');
+				for (let i = 0; i < lines.length; ++i) {
+					let strings = lines[i].split(/\s/g);
+					if (strings.length >= 2 && strings[1].match(word)) {
+						return new vscode.Location(vscode.Uri.file(parent_path + iterator), new vscode.Position(i, 0));
+					}
+				}
+			}
+		} else if (document.lineAt(position).text.match(header_file_reg)) {
+			let full_path = parent_path + /(?<=\<|\")[\w.\/]*(?=\>|\")/g.exec(document.lineAt(position).text);
+			if (fs.existsSync(full_path)) {
+				return new vscode.Location(vscode.Uri.file(full_path), new vscode.Position(0, 0));
 			}
 		}
 	}
