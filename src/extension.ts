@@ -4,7 +4,8 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as rd from 'readline';
 
-let associate_files: Array<string> = [];
+let associate_c_files: Array<string> = [];
+let associate_dec_files: Array<string> = [];
 
 /*
 */
@@ -65,10 +66,10 @@ class Edk2DecProvider implements vscode.DefinitionProvider {
 		// console.log(parent_path);
 
 		let directory = [parent_path + dest];
-		for (let i = 0; i <= document.lineCount; i++) {
+		for (let i = 0; i < document.lineCount; i++) {
 			let content = document.lineAt(i).text.trim();
 			if (content.match('\\[Includes\\]')) {
-				for (i += 1; i <= document.lineCount; i++) {
+				for (i += 1; i < document.lineCount; i++) {
 					let folder = document.lineAt(i).text.trim();
 					if (folder.length === 0) {
 						continue;
@@ -121,18 +122,18 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 			let table = dest.replace(/\s/g, '').split('=');
 
 			// Jump to C function. 
-			if (table.length === 2 && associate_files.length > 0 && keywords.includes(table[0])) {
+			if (table.length === 2 && associate_c_files.length > 0 && keywords.includes(table[0])) {
 				// table[0] = keywords, table[1] = function name;
 				let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
 				// console.log(parent_path);
-				for (let iterator of associate_files) {
+				for (let iterator of associate_c_files) {
 					if (!fs.existsSync(parent_path + iterator)) {
 						continue;
 					}
 
 					let reg = new RegExp('.*' + table[1] + '.*');
 					let lines = fs.readFileSync(parent_path + iterator, 'utf8').split('\n');
-					for (let i = 0; i < lines.length; ++i) {
+					for (let i = 0; i < lines.length; i++) {
 						if (lines[i].match(reg)) {
 							return new vscode.Location(vscode.Uri.file(parent_path + iterator), new vscode.Position(i, 0));
 						}
@@ -161,7 +162,7 @@ class Edk2VfrProvider implements vscode.DefinitionProvider {
 					continue;
 				}
 				let lines = fs.readFileSync(parent_path + iterator, 'utf8').split('\n');
-				for (let i = 0; i < lines.length; ++i) {
+				for (let i = 0; i < lines.length; i++) {
 					let strings = lines[i].split(/\s/g);
 					if (strings.length >= 2 && strings[1].match(word)) {
 						return new vscode.Location(vscode.Uri.file(parent_path + iterator), new vscode.Position(i, 0));
@@ -187,22 +188,41 @@ function openFileHandler(file: vscode.TextDocument) {
 	}
 	*/
 	if (file_extension.match('.inf')) {
-		associate_files = [];
-		for (let i = 0; i <= file.lineCount; i++) {
+		associate_c_files = [];
+		associate_dec_files = [];
+		for (let i = 0; i < file.lineCount; i++) {
 			if (file.lineAt(i).text.toUpperCase().match(/\[SOURCES[a-zA-Z\.]*\]/g)) {
-				while (++i <= file.lineCount && file.lineAt(i).text[0] !== '[') {
+				for (i += 1 ; i < file.lineCount; i++) {
 					let content = file.lineAt(i).text.trim();
 					if (content.length > 0) {
-						associate_files.push(content);
+						if (content[0] === '[') {
+							i -= 1; // reparse this line for next loop
+							break;
+						} else {
+							associate_c_files.push(content);
+						}
 					}
 				}
-				break;
+			} else if (file.lineAt(i).text.toUpperCase().match(/\[PACKAGES[a-zA-Z\.]*\]/g)) {
+				console.log(123);
+				for (i += 1 ; i < file.lineCount; i++) {
+					let content = file.lineAt(i).text.trim();
+					if (content.length > 0) {
+						if (content[0] === '[') {
+							i -= 1; // reparse this line for next loop
+							break;
+						} else {
+							associate_dec_files.push(content);
+						}
+					}
+				}
 			}
 		}
 
 	}
 
-	// console.log(associate_files);
+	console.log(associate_c_files);
+	console.log(associate_dec_files);
 }
 
 // this method is called when your extension is activated
