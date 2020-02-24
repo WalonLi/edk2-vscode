@@ -19,7 +19,7 @@ edk2-vscode is a plugin of vscode for supporting edk2 files association.
 
 ```
 GNU GENERAL PUBLIC LICENSE
-Copyright (C) 2019  WalonLi
+Copyright (C) 2019-2020  WalonLi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

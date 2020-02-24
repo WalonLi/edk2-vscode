@@ -11,15 +11,15 @@
 			"patterns": [
 				{
 					"name": "variable.language.edk2_dec",
-					"match": "((?<!\\w)PACKAGE_NAME|PACKAGE_GUID|PACKAGE_VERSION|PACKAGE_UNI_FILE|DEC_SPECIFICATION)(?!\\w)"
+					"match": "((?<!\\w)(PACKAGE_NAME|PACKAGE_GUID|PACKAGE_VERSION|PACKAGE_UNI_FILE|DEC_SPECIFICATION))(?!\\w)"
 				},
 				{
 					"name": "variable.parameter.edk2_dec",
-					"match": "[a-zA-Z0-9_/]+\\.h"
+					"match": "[\\w/-]+\\.h"
 				},
 				{
 					"name": "keyword.control.edk2_dec",
-					"match": "((?<!\\w)DEFINE)(?!\\w)|(?<=!)(if|endif|ifdef|ifndef|include|else)"
+					"match": "((?<!\\w)DEFINE)(?!\\w)|(?<=!)(ifdef|ifndef|if|endif|include|else)"
 				},
 				{
 					"name": "constant.numeric.edk2_dec",

@@ -19,7 +19,7 @@
 				},
 				{
 					"name": "variable.parameter.edk2_inf",
-					"match": "[a-zA-Z0-9_/]+\\.[a-zA-Z]+"
+					"match": "[\\w/-]+\\.(dec|c|uni|h|vfr|Vfr|hfr)"
 				},
 				{
 					"name": "constant.numeric.edk2_inf",
