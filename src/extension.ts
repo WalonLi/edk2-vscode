@@ -99,11 +99,17 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 			.replace(/^\s*/g, '')										// front blank
 			.replace(/[\s]*$/g, '');									// tail blank	
 
-		// console.log(dest);
-		if (dest.match(/[a-zA-Z0-9\s]+\.[a-zA-Z0-9\s]+/g)) {
-			let file_extension = dest.replace(/^[a-zA-Z0-9\s\/]+/g, '');
+		// console.log(dest, dest.match(/^[a-zA-Z0-9_\/]+\.[a-zA-Z0-9]+$/g));
+
+		if (dest.match(/^[a-zA-Z0-9_\-\/]+\.[a-zA-Z0-9_\-]+$/g)) {
+			// format: ****.***
+
+			let file_extension = dest.replace(/^[a-zA-Z0-9_\-\/]+/g, '');
 			// console.log('extension ' + file_extension);
 			if (file_extension.match('.dec')) {
+				//
+				// dec
+				//
 				if (vscode.workspace.workspaceFolders) {
 					let root_path = vscode.workspace.workspaceFolders[0].uri.fsPath + '/';
 					if (fs.existsSync(root_path + dest)) {
@@ -111,10 +117,18 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 					}
 				}
 			} else {
-				let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
+
+				let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9_\-\.]*$/g, '');
 				// console.log(parent_path+dest);
 				if (fs.existsSync(parent_path + dest)) {
+					//
+					// source code
+					//
 					return new vscode.Location(vscode.Uri.file(parent_path + dest), new vscode.Position(0, 0));
+				} else {
+					// pcd
+					let pcd_tokens = dest.split('.');
+					console.log(pcd_tokens);
 				}
 			}
 		} else {
@@ -154,7 +168,7 @@ class Edk2VfrProvider implements vscode.DefinitionProvider {
 		let word = document.getText(document.getWordRangeAtPosition(position));
 		let string_token_reg = new RegExp('.*' + 'STRING_TOKEN' + '\\s*' + '\\(' + word + '\\)' + '.*');
 		let header_file_reg = new RegExp('.*' + '\\#include' + '.*');
-		
+
 		if (document.lineAt(position).text.match(string_token_reg)) {
 			let uni_files = fs.readdirSync(parent_path).filter((value, index, array) => value.match(/[\w]+\.uni/g));
 			for (let iterator of uni_files) {
@@ -192,7 +206,7 @@ function openFileHandler(file: vscode.TextDocument) {
 		associate_dec_files = [];
 		for (let i = 0; i < file.lineCount; i++) {
 			if (file.lineAt(i).text.toUpperCase().match(/\[SOURCES[a-zA-Z\.]*\]/g)) {
-				for (i += 1 ; i < file.lineCount; i++) {
+				for (i += 1; i < file.lineCount; i++) {
 					let content = file.lineAt(i).text.trim();
 					if (content.length > 0) {
 						if (content[0] === '[') {
@@ -204,8 +218,7 @@ function openFileHandler(file: vscode.TextDocument) {
 					}
 				}
 			} else if (file.lineAt(i).text.toUpperCase().match(/\[PACKAGES[a-zA-Z\.]*\]/g)) {
-				console.log(123);
-				for (i += 1 ; i < file.lineCount; i++) {
+				for (i += 1; i < file.lineCount; i++) {
 					let content = file.lineAt(i).text.trim();
 					if (content.length > 0) {
 						if (content[0] === '[') {
@@ -221,8 +234,8 @@ function openFileHandler(file: vscode.TextDocument) {
 
 	}
 
-	console.log(associate_c_files);
-	console.log(associate_dec_files);
+	// console.log(associate_c_files);
+	// console.log(associate_dec_files);
 }
 
 // this method is called when your extension is activated
