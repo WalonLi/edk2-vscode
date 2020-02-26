@@ -7,13 +7,54 @@ import * as rd from 'readline';
 let associate_c_files: Array<string> = [];
 let associate_dec_files: Array<string> = [];
 
+class Common {
+	static removeHashTagComment(line: string): string {
+		return line.replace(/#.*/g, '')	// comments
+			.replace(/^\s*/g, '')		// front blank
+			.replace(/[\s]*$/g, '');	// tail blank
+	}
+
+	static pushMatchContent(file: vscode.TextDocument, start: number, end: number, associate_files: string[]): number {
+		for (; start < end; start++) {
+			let content = file.lineAt(start).text.replace(/#.*/g, '')	// comments
+				.replace(/^\s*/g, '')									// front blank
+				.replace(/[\s]*$/g, '');								// tail blank	
+			if (content.length > 0) {
+				if (content[0] === '[') {
+					break;
+				} else {
+					associate_files.push(content);
+				}
+			}
+		}
+		return start - 1; // reparse this line for next loop
+	}
+
+	static searchPatternInFiles(associate_files: string[], base_path: string, pattern: string): vscode.Location | null {
+
+		for (let iterator of associate_files) {
+			if (!fs.existsSync(base_path + iterator)) {
+				continue;
+			}
+
+			let reg = new RegExp('.*' + pattern + '.*');
+			let lines = fs.readFileSync(base_path + iterator, 'utf8').split('\n');
+			for (let i = 0; i < lines.length; i++) {
+				if (lines[i].match(reg)) {
+					return new vscode.Location(vscode.Uri.file(base_path + iterator), new vscode.Position(i, 0));
+				}
+			}
+		}
+		return null;
+	}
+}
+
 /*
 */
 class Edk2FdfProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
-		let dest = document.lineAt(position).text.replace(/#.*/g, '')	// comments
-			.replace(/^\s*/g, '')										// front blank
-			.replace(/[\s]*$/g, '');									// tail blank
+		let dest = Common.removeHashTagComment(document.lineAt(position).text);
+
 		// Check INF prefix
 		if (dest.match(/^INF[a-zA-Z0-9\s]+/g)) {
 			if (vscode.workspace.workspaceFolders) {
@@ -31,7 +72,6 @@ class Edk2FdfProvider implements vscode.DefinitionProvider {
 */
 class Edk2DscProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
-
 
 		let dest = document.lineAt(position).text.replace(/#.*/g, '')	// comments
 			.replace(/^\s*/g, '')										// front blank
@@ -94,13 +134,9 @@ class Edk2DecProvider implements vscode.DefinitionProvider {
 */
 class Edk2InfProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
-		// check destination file.
-		let dest = document.lineAt(position).text.replace(/#.*/g, '')	// comments
-			.replace(/^\s*/g, '')										// front blank
-			.replace(/[\s]*$/g, '');									// tail blank	
+		let dest = Common.removeHashTagComment(document.lineAt(position).text);
 
 		// console.log(dest, dest.match(/^[a-zA-Z0-9_\/]+\.[a-zA-Z0-9]+$/g));
-
 		if (dest.match(/^[a-zA-Z0-9_\-\/]+\.[a-zA-Z0-9_\-]+$/g)) {
 			// format: ****.***
 
@@ -126,33 +162,51 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 					//
 					return new vscode.Location(vscode.Uri.file(parent_path + dest), new vscode.Position(0, 0));
 				} else {
+					//
 					// pcd
-					let pcd_tokens = dest.split('.');
-					console.log(pcd_tokens);
+					//
+					if (associate_dec_files.length > 0 && vscode.workspace.workspaceFolders) {
+						let root_path = vscode.workspace.workspaceFolders[0].uri.fsPath + '/';
+
+						return Common.searchPatternInFiles(associate_dec_files, root_path, dest);
+					}
 				}
 			}
 		} else {
 			let keywords = ['ENTRY_POINT', 'UNLOAD_IMAGE', 'CONSTRUCTOR', 'DESTRUCTOR'];
 			let table = dest.replace(/\s/g, '').split('=');
 
-			// Jump to C function. 
-			if (table.length === 2 && associate_c_files.length > 0 && keywords.includes(table[0])) {
+			if (table.length === 1 && table[0].substring(table[0].length - 4, table[0].length).match('Guid')) {
+				//
+				// Guid
+				//
+
+				// Only support Protocols and Guids section
+				let supportable = false;
+				console.log(table);
+				for (let i = position.line; i > 0; i--) {
+					let line = Common.removeHashTagComment(document.lineAt(i).text.toUpperCase());
+					if (line[0] === '[') {
+						if (line.match(/\[PROTOCOLS[a-zA-Z\.]*\]/g) || line.match(/\[GUIDS[a-zA-Z\.]*\]/g)) {
+							supportable = true;
+						}
+						break;
+					}
+				}
+				if (supportable && associate_dec_files.length > 0 && vscode.workspace.workspaceFolders) {
+					let root_path = vscode.workspace.workspaceFolders[0].uri.fsPath + '/';
+
+					return Common.searchPatternInFiles(associate_dec_files, root_path, dest);
+				}
+			} else if (table.length === 2 && associate_c_files.length > 0 && keywords.includes(table[0])) {
+				//
+				// Jump to C function. 
+				//
+
 				// table[0] = keywords, table[1] = function name;
 				let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
 				// console.log(parent_path);
-				for (let iterator of associate_c_files) {
-					if (!fs.existsSync(parent_path + iterator)) {
-						continue;
-					}
-
-					let reg = new RegExp('.*' + table[1] + '.*');
-					let lines = fs.readFileSync(parent_path + iterator, 'utf8').split('\n');
-					for (let i = 0; i < lines.length; i++) {
-						if (lines[i].match(reg)) {
-							return new vscode.Location(vscode.Uri.file(parent_path + iterator), new vscode.Position(i, 0));
-						}
-					}
-				}
+				return Common.searchPatternInFiles(associate_c_files, parent_path, table[1]);
 			}
 		}
 	}
@@ -192,6 +246,7 @@ class Edk2VfrProvider implements vscode.DefinitionProvider {
 	}
 }
 
+
 function openFileHandler(file: vscode.TextDocument) {
 
 	let file_extension = file.uri.fsPath.substring(file.uri.fsPath.length - 4);
@@ -205,33 +260,14 @@ function openFileHandler(file: vscode.TextDocument) {
 		associate_c_files = [];
 		associate_dec_files = [];
 		for (let i = 0; i < file.lineCount; i++) {
-			if (file.lineAt(i).text.toUpperCase().match(/\[SOURCES[a-zA-Z\.]*\]/g)) {
-				for (i += 1; i < file.lineCount; i++) {
-					let content = file.lineAt(i).text.trim();
-					if (content.length > 0) {
-						if (content[0] === '[') {
-							i -= 1; // reparse this line for next loop
-							break;
-						} else {
-							associate_c_files.push(content);
-						}
-					}
-				}
-			} else if (file.lineAt(i).text.toUpperCase().match(/\[PACKAGES[a-zA-Z\.]*\]/g)) {
-				for (i += 1; i < file.lineCount; i++) {
-					let content = file.lineAt(i).text.trim();
-					if (content.length > 0) {
-						if (content[0] === '[') {
-							i -= 1; // reparse this line for next loop
-							break;
-						} else {
-							associate_dec_files.push(content);
-						}
-					}
-				}
+
+			let line = Common.removeHashTagComment(file.lineAt(i).text.toUpperCase());
+			if (line.match(/\[SOURCES[a-zA-Z\.]*\]/g)) {
+				i = Common.pushMatchContent(file, i + 1, file.lineCount, associate_c_files);
+			} else if (line.match(/\[PACKAGES[a-zA-Z\.]*\]/g)) {
+				i = Common.pushMatchContent(file, i + 1, file.lineCount, associate_dec_files);
 			}
 		}
-
 	}
 
 	// console.log(associate_c_files);
