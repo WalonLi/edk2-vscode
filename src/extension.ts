@@ -16,9 +16,7 @@ class Common {
 
 	static pushMatchContent(file: vscode.TextDocument, start: number, end: number, associate_files: string[]): number {
 		for (; start < end; start++) {
-			let content = file.lineAt(start).text.replace(/#.*/g, '')	// comments
-				.replace(/^\s*/g, '')									// front blank
-				.replace(/[\s]*$/g, '');								// tail blank	
+			let content = Common.removeHashTagComment(file.lineAt(start).text);
 			if (content.length > 0) {
 				if (content[0] === '[') {
 					break;
@@ -183,7 +181,6 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 
 				// Only support Protocols and Guids section
 				let supportable = false;
-				console.log(table);
 				for (let i = position.line; i > 0; i--) {
 					let line = Common.removeHashTagComment(document.lineAt(i).text.toUpperCase());
 					if (line[0] === '[') {
