@@ -2,21 +2,31 @@
 edk2-vscode is a plugin of vscode for supporting edk2 files association.
 
 ## Syntax Highlight
-* **FDF** Syntax
-* **DSC** Syntax
-* **DEC** Syntax
-* **INF** Syntax
-* **UNI** Syntax
-* **VFR** Syntax
+* DEC/DSC/FDF/INF/UNI/VFR
 
 ## Definition Hotkey (F12)
-* **FDF** File definition hotkey
-* **DSC** File definition hotkey
-* **DEC** File definition hotkey
-* **INF** Function/File/Guid/Pcd definition hoteky
-* **VFR** STRING_TOKEN/Header definition hotkey
+Extension       |Functions
+----------------|-------
+**FDF**         |File definition hotkey
+**DSC**         |File definition hotkey
+**DEC**         |File definition hotkey
+**INF**         |Function/File/Guid/Pcd definition hoteky
+**VFR**         |STRING_TOKEN/Header definition hotkey
+
+![](demo/destination.gif)
 
 ## Comment Toggling (Ctrl+/)
+* DEC/DSC/FDF/INF/UNI/VFR
+
+## Snippet
+Name            |Alias
+----------------|-------
+**DEBUG**       |DEBUG / debug / Debug / CTRL+F1
+**ERROR**       |EFI_ERROR / error
+**NONE ERROR**  |!EFI_ERROR / !error
+**ASSERT**      |ASSERT / assert
+
+![](demo/snippet.gif)
 
 ```
 GNU GENERAL PUBLIC LICENSE
