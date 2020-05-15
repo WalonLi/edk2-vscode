@@ -4,8 +4,6 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as rd from 'readline';
 
-let associate_c_files: Array<string> = [];
-let associate_dec_files: Array<string> = [];
 
 class Common {
 	static removeHashTagComment(line: string): string {
@@ -75,7 +73,12 @@ class Edk2DscProvider implements vscode.DefinitionProvider {
 			.replace(/^\s*/g, '')										// front blank
 			.replace(/[\s\{\}]*$/g, '')									// tail "{", "}"" and blank
 			.replace(/[a-zA-Z0-9\s]+\|/g, '');							// front "|" and blank
+
 		if (vscode.workspace.workspaceFolders) {
+			if (dest.match(/^(!include )/g)) {
+				dest = dest.replace(/^(!include )/g, '');
+			}
+
 			dest = vscode.workspace.workspaceFolders[0].uri.fsPath + '/' + dest;
 			if (fs.existsSync(dest)) {
 				return new vscode.Location(vscode.Uri.file(dest), new vscode.Position(0, 0));
@@ -120,6 +123,7 @@ class Edk2DecProvider implements vscode.DefinitionProvider {
 			}
 		}
 
+		
 		for (let iterator of directory) {
 			if (fs.existsSync(iterator)) {
 				return new vscode.Location(vscode.Uri.file(iterator), new vscode.Position(0, 0));
@@ -133,6 +137,18 @@ class Edk2DecProvider implements vscode.DefinitionProvider {
 class Edk2InfProvider implements vscode.DefinitionProvider {
 	provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
 		let dest = Common.removeHashTagComment(document.lineAt(position).text);
+		let associate_c_files: Array<string> = [];
+		let associate_dec_files: Array<string> = [];
+
+		// Parse dec/c files
+		for (let i = 0; i < document.lineCount; i++) {
+			let line = Common.removeHashTagComment(document.lineAt(i).text.toUpperCase());
+			if (line.match(/\[SOURCES[a-zA-Z\.]*\]/g)) {
+				i = Common.pushMatchContent(document, i + 1, document.lineCount, associate_c_files);
+			} else if (line.match(/\[PACKAGES[a-zA-Z\.]*\]/g)) {
+				i = Common.pushMatchContent(document, i + 1, document.lineCount, associate_dec_files);
+			}
+		}
 
 		// console.log(dest, dest.match(/^[a-zA-Z0-9_\/]+\.[a-zA-Z0-9]+$/g));
 		if (dest.match(/^[a-zA-Z0-9_\-\/]+\.[a-zA-Z0-9_\-]+$/g)) {
@@ -172,7 +188,7 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 			}
 		} else {
 			let keywords = ['ENTRY_POINT', 'UNLOAD_IMAGE', 'CONSTRUCTOR', 'DESTRUCTOR'];
-			let table = dest.replace(/\s/g, '').split('=');
+			let table = dest.replace(/\s|(AND)/g, '').split('=');
 
 			if (table.length === 1 && table[0].substring(table[0].length - 4, table[0].length).match('Guid')) {
 				//
@@ -184,7 +200,11 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 				for (let i = position.line; i > 0; i--) {
 					let line = Common.removeHashTagComment(document.lineAt(i).text.toUpperCase());
 					if (line[0] === '[') {
-						if (line.match(/\[PROTOCOLS[a-zA-Z\.]*\]/g) || line.match(/\[GUIDS[a-zA-Z\.]*\]/g)) {
+						if (line.match(/\[PROTOCOLS[a-zA-Z\.]*\]/g) ||
+							line.match(/\[GUIDS[a-zA-Z\.]*\]/g) ||
+							line.match(/\[PPIS[a-zA-Z\.]*\]/g) ||
+							line.match(/\[DEPEX[a-zA-Z\.]*\]/g)) {
+
 							supportable = true;
 						}
 						break;
@@ -192,8 +212,8 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
 				}
 				if (supportable && associate_dec_files.length > 0 && vscode.workspace.workspaceFolders) {
 					let root_path = vscode.workspace.workspaceFolders[0].uri.fsPath + '/';
-
-					return Common.searchPatternInFiles(associate_dec_files, root_path, dest);
+					
+					return Common.searchPatternInFiles(associate_dec_files, root_path, table[0]);
 				}
 			} else if (table.length === 2 && associate_c_files.length > 0 && keywords.includes(table[0])) {
 				//
@@ -245,14 +265,14 @@ class Edk2VfrProvider implements vscode.DefinitionProvider {
 
 
 function openFileHandler(file: vscode.TextDocument) {
-
-	let file_extension = file.uri.fsPath.substring(file.uri.fsPath.length - 4);
 	/*
+	let file_extension = file.uri.fsPath.substring(file.uri.fsPath.length - 4);
+	
 	if (file_extension.match('.git') || file_extension.match('.svn')) {
 		// Should not parse another plugin...
 		return;
 	}
-	*/
+
 	if (file_extension.match('.inf')) {
 		associate_c_files = [];
 		associate_dec_files = [];
@@ -267,8 +287,9 @@ function openFileHandler(file: vscode.TextDocument) {
 		}
 	}
 
-	// console.log(associate_c_files);
-	// console.log(associate_dec_files);
+	console.log(associate_c_files);
+	console.log(associate_dec_files);
+	*/
 }
 
 // this method is called when your extension is activated
@@ -297,7 +318,7 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_dec' }, new Edk2DecProvider());
 	vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_inf' }, new Edk2InfProvider());
 	vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_vfr' }, new Edk2VfrProvider());
-	vscode.workspace.onDidOpenTextDocument((file) => { openFileHandler(file); });
+	// vscode.workspace.onDidOpenTextDocument((file) => { openFileHandler(file); });
 
 	// vscode.workspace.registerTextDocumentContentProvider({scheme: 'file', language: 'edk2_inf'}, new Edk2InfOpenProvider());
 

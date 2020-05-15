@@ -59,6 +59,7 @@
 				"id": "edk2_vfr",
 				"extensions": [
 					".vfr",
+					".Vfr",
 					".hfr"
 				],
 				"configuration": "./confs/edk2_vfr.conf.json"
