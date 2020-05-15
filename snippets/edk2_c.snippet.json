@@ -1,0 +1,22 @@
+{
+	"debug_snippet": {
+		"prefix": ["DEBUG", "debug", "Debug"],
+		"body": ["DEBUG ((DEBUG_ERROR, \"%a %d $0 \\n\", __FUNCTION__, __LINE__));"],
+		"description": "EDK2 debug snippet"
+	},
+	"error_snippet": {
+		"prefix": ["EFI_ERROR", "error"],
+		"body": ["EFI_ERROR (${0:Status})"],
+		"description": "EFI error snippet"
+	},
+	"none_error_snippet": {
+		"prefix": ["!EFI_ERROR", "!error"],
+		"body": ["!EFI_ERROR (${0:Status})"],
+		"description": "EFI none error snippet"
+	},
+	"assert_snippet": {
+		"prefix": ["ASSERT", "assert"],
+		"body": ["ASSERT_EFI_ERROR (${0:Status});"],
+		"description": "EFI assert snippet"
+	}
+}

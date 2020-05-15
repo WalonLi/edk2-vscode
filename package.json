@@ -2,12 +2,13 @@
 	"name": "edk2-vscode",
 	"displayName": "edk2-vscode",
 	"description": "",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"publisher": "walonli",
 	"engines": {
 		"vscode": "^1.37.0"
 	},
 	"categories": [
+		"Language Packs",
 		"Other"
 	],
 	"activationEvents": [
@@ -96,7 +97,28 @@
 				"scopeName": "source.edk2_vfr",
 				"path": "./syntaxes/edk2_vfr.tmLanguage.json"
 			}
-		]
+		],
+		"snippets": [
+			{
+				"language": "c",
+				"path": "./snippets/edk2_c.snippet.json"
+			},
+			{
+				"language": "cpp",
+				"path": "./snippets/edk2_c.snippet.json"
+			}
+		],
+		"keybindings": [
+			{
+				"key": "ctrl+f1",
+				"command": "editor.action.insertSnippet",
+				"when": "resourceLangId == c || resourceLangId == cpp",
+				"args": {
+					"langId": "c",
+					"name": "debug_snippet"
+				}
+			}
+        ]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
