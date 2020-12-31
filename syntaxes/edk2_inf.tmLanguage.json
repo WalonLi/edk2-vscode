@@ -15,7 +15,7 @@
 				},
 				{
 					"name": "variable.language.edk2_inf",
-					"match": "((?<!\\w)(DXE_CORE|PEIM|PEI_CORE|SEC|DXE_DRIVER|DXE_RUNTIME_DRIVER|DXE_SAL_DRIVER|DXE_SMM_DRIVER|SMM_CORE|UEFI_APPLICATION|UEFI_DRIVER|USER_DEFINED))(?!\\w)"
+					"match": "((?<!\\w)(DXE_CORE|PEIM|PEI_CORE|SEC|DXE_DRIVER|DXE_RUNTIME_DRIVER|DXE_SAL_DRIVER|DXE_SMM_DRIVER|SMM_CORE|UEFI_APPLICATION|UEFI_DRIVER|USER_DEFINED|HOST_APPLICATION))(?!\\w)"
 				},
 				{
 					"name": "variable.parameter.edk2_inf",
