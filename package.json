@@ -108,6 +108,18 @@
 				"path": "./snippets/edk2_c.snippet.json"
 			}
 		],
+		"commands": [
+			{
+				"command": "extension.buildDsc",
+				"title": "Build dsc"
+			}
+		],
+		"menus": {
+			"explorer/context": [{
+				"when": "resourceLangId == edk2_dsc",
+				"command": "extension.buildDsc"
+		  }]
+		},
 		"keybindings": [
 			{
 				"key": "ctrl+f1",
@@ -118,7 +130,22 @@
 					"name": "debug_snippet"
 				}
 			}
-        ]
+		],
+		"configuration": {
+			"title": "Edk2 Build Paramter",
+			"properties": {
+				"edk2-vscode.build.compiler": {
+					"type": "string",
+					"default": "VS2015x86",
+					"description": "Specific edk2 build compiler, plz refer https://github.com/tianocore/edk2"
+				},
+				"edk2-vscode.build.arch": {
+					"type": "string",
+					"default": "X64",
+					"description": "Specific edk2 build arch (IA32 / X64 / AARCH64 / ARM ...), plz refer https://github.com/tianocore/edk2"
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
@@ -133,7 +160,7 @@
 		"@types/node": "^10.12.21",
 		"@types/vscode": "^1.37.0",
 		"glob": "^7.1.4",
-		"mocha": "^6.1.4",
+		"mocha": "^8.2.1",
 		"typescript": "^3.3.1",
 		"tslint": "^5.12.1",
 		"vscode-test": "^1.0.2"
@@ -141,6 +168,9 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/WalonLi/edk2-vscode.git"
+	},
+	"dependencies": {
+		"open-file-explorer": "^1.0.2"
 	},
 	"homepage": "https://github.com/WalonLi/edk2-vscode/blob/master/README.md"
 }

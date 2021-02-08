@@ -43,6 +43,18 @@ class Common {
 		}
 		return null;
 	}
+
+	static buildDsc (...args: any[])
+	{
+		let config = vscode.workspace.getConfiguration('edk2-vscode');
+		let parameter = ' -p ' + 
+						args[0].path.substring(1) +
+						' -t ' +
+						(config.has('build.compiler') ? config.get('build.compiler') : 'VS2015x86') +
+						' -a ' +
+						(config.has('build.arch') ? config.get('build.arch') : 'X64');
+		vscode.window.terminals[0].sendText('cmd.exe /K \"edksetup.bat & Build' + parameter + '\"');
+	}
 }
 
 /*
@@ -263,35 +275,6 @@ class Edk2VfrProvider implements vscode.DefinitionProvider {
 	}
 }
 
-
-function openFileHandler(file: vscode.TextDocument) {
-	/*
-	let file_extension = file.uri.fsPath.substring(file.uri.fsPath.length - 4);
-	
-	if (file_extension.match('.git') || file_extension.match('.svn')) {
-		// Should not parse another plugin...
-		return;
-	}
-
-	if (file_extension.match('.inf')) {
-		associate_c_files = [];
-		associate_dec_files = [];
-		for (let i = 0; i < file.lineCount; i++) {
-
-			let line = Common.removeHashTagComment(file.lineAt(i).text.toUpperCase());
-			if (line.match(/\[SOURCES[a-zA-Z\.]*\]/g)) {
-				i = Common.pushMatchContent(file, i + 1, file.lineCount, associate_c_files);
-			} else if (line.match(/\[PACKAGES[a-zA-Z\.]*\]/g)) {
-				i = Common.pushMatchContent(file, i + 1, file.lineCount, associate_dec_files);
-			}
-		}
-	}
-
-	console.log(associate_c_files);
-	console.log(associate_dec_files);
-	*/
-}
-
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -318,10 +301,8 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_dec' }, new Edk2DecProvider());
 	vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_inf' }, new Edk2InfProvider());
 	vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_vfr' }, new Edk2VfrProvider());
-	// vscode.workspace.onDidOpenTextDocument((file) => { openFileHandler(file); });
 
-	// vscode.workspace.registerTextDocumentContentProvider({scheme: 'file', language: 'edk2_inf'}, new Edk2InfOpenProvider());
-
+	context.subscriptions.push(vscode.commands.registerCommand('extension.buildDsc', Common.buildDsc));
 }
 
 // this method is called when your extension is deactivated
