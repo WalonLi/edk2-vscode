@@ -47,12 +47,14 @@ class Common {
 	static buildDsc (...args: any[])
 	{
 		let config = vscode.workspace.getConfiguration('edk2-vscode');
-		let parameter = ' -p ' + 
+		let parameter = ' -p ' +
 						args[0].path.substring(1) +
 						' -t ' +
 						(config.has('build.compiler') ? config.get('build.compiler') : 'VS2015x86') +
 						' -a ' +
-						(config.has('build.arch') ? config.get('build.arch') : 'X64');
+						(config.has('build.arch') ? config.get('build.arch') : 'X64') +
+						' -b ' +
+						(config.has('build.target') ? config.get('build.target') : 'DEBUG');
 		vscode.window.terminals[0].sendText('cmd.exe /K \"edksetup.bat & Build' + parameter + '\"');
 	}
 }
