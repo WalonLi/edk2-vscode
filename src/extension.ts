@@ -45,16 +45,21 @@ class Common {
 
   static buildDsc (...args: any[])
   {
+    let os = require('os');
     let config = vscode.workspace.getConfiguration('edk2-vscode');
     let parameter = ' -p ' +
-                    args[0].path.substring(1) +
+                    args[0].path.substring((os.platform() === 'win32' ? 1 : 0)) +   // windows: \d:\xxxxx ; linux /home/xxxxx
                     ' -t ' +
                     (config.has('build.compiler') ? config.get('build.compiler') : 'VS2015x86') +
                     ' -a ' +
                     (config.has('build.arch') ? config.get('build.arch') : 'X64') +
                     ' -b ' +
                     (config.has('build.target') ? config.get('build.target') : 'DEBUG');
-    vscode.window.terminals[0].sendText('cmd.exe /K \"edksetup.bat & Build' + parameter + '\"');
+    if (os.platform() === 'win32') {
+      vscode.window.terminals[0].sendText('cmd.exe /K \"edksetup.bat & build' + parameter + '\"');
+    } else {
+      vscode.window.terminals[0].sendText('. edksetup.sh && build' + parameter);
+    }
   }
 
   static goToBuild (...args: any[])
@@ -64,7 +69,7 @@ class Common {
     let config = vscode.workspace.getConfiguration('edk2-vscode');
 
     if (vscode.workspace.workspaceFolders) {
-      let inf = args[0].path.substring(1 + vscode.workspace.workspaceFolders[0].uri.fsPath.length).replace(/.inf$/g, '');
+      let inf = args[0].path.substring((os.platform() === 'win32' ? 1 : 0) + vscode.workspace.workspaceFolders[0].uri.fsPath.length).replace(/.inf$/g, '');
       let dict = vscode.workspace.workspaceFolders[0].uri.fsPath.replace(/\\/g, '/') +
                  '/' +
                  'Build' +
@@ -80,7 +85,7 @@ class Common {
         let full_path = dict + arch + inf;
         if (fs.existsSync(full_path)) {
           // openExplorer only accept '\\' in windows.
-          if (os.platform() == 'win32') {
+          if (os.platform() === 'win32') {
             openExplorer(full_path.replace(/\//g, '\\'), () => {});
           } else {
             openExplorer(full_path, () => {});
