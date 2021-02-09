@@ -1,84 +1,84 @@
 {
-	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-	"name": "source.edk2_fdf",
-	"patterns": [
-		{
-			"include": "#edk2_fdf_color"
-		}
-	],
-	"repository": {
-		"edk2_fdf_color": {
-			"patterns": [
-				{
-					"name": "variable.language.edk2_fdf",
-					"match": "((?<!\\w)(BaseAddress|Size|ErasePolarity|BlockSize|NumBlocks|FV|FD|FvAlignment|FvNameGuid))(?!\\w)"
-				},
-				{
-					"name": "variable.language.edk2_fdf",
-					"match": "((?<!\\w)(ERASE_POLARITY|MEMORY_MAPPED|STICKY_WRITE|LOCK_CAP|LOCK_STATUS|WRITE_DISABLED_CAP|WRITE_ENABLED_CAP|WRITE_STATUS|WRITE_LOCK_CAP|WRITE_LOCK_STATUS|READ_DISABLED_CAP|READ_ENABLED_CAP|READ_STATUS|READ_LOCK_CAP|READ_LOCK_STATUS))(?!\\w)"
-				},
-				{
-					"name": "variable.parameter.edk2_fdf",
-					"match": "[\\w/-]+\\.[a-zA-Z]+"
-				},
-				{
-					"name": "keyword.control.edk2_fdf",
-					"match": "((?<!\\w)DEFINE)(?!\\w)|(?<=!)(if|endif|ifdef|ifndef|include|else)"
-				},
-				{
-					"name": "constant.numeric.edk2_fdf",
-					"match": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
-				},
-				{
-					"name": "constant.numeric.edk2_fdf",
-					"match": "(?<!\\w)\\.?\\d(?:(?:[0-9a-zA-Z_\\.]|')|(?<=[eEpP])[+-])*"
-				},
-				{
-					"name": "constant.language.edk2_fdf",
-					"match": "((?<!\\w)TRUE|FALSE|NULL)(?!\\w)"
-				},
-				{
-					"name": "string.quoted.double.edk2_fdf",
-					"begin": "L\"|\"",
-					"end": "\""
-				},
-				{
-					"begin": "\\[",
-					"end": "\\]",
-					"patterns": [
-						{
-							"name": "string.quoted.double.edk2_fdf",
-							"match": "[a-zA-Z0-9.]+"
-						}
-					]
-				},
-				{
-					"begin": "\\<",
-					"end": "\\>",
-					"patterns": [
-						{
-							"name": "string.quoted.double.edk2_fdf",
-							"match": "[a-zA-Z0-9.]+"
-						}
-					]
-				},
-				{
-					"begin": "\\$\\(",
-					"end": "\\)",
-					"patterns": [
-						{
-							"name": "support.function.edk2_fdf",
-							"match": "[a-zA-Z0-9_]+"
-						}
-					]
-				},
-				{
-					"name": "comment.line.number-sign.edk2_fdf",
-					"begin": "#|\/\/",
-					"end": "\n"
-				}
-			]
-		}
-	},
-	"scopeName": "source.edk2_fdf"
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "source.edk2_fdf",
+  "patterns": [
+    {
+      "include": "#edk2_fdf_color"
+    }
+  ],
+  "repository": {
+    "edk2_fdf_color": {
+      "patterns": [
+        {
+          "name": "variable.language.edk2_fdf",
+          "match": "((?<!\\w)(BaseAddress|Size|ErasePolarity|BlockSize|NumBlocks|FV|FD|FvAlignment|FvNameGuid))(?!\\w)"
+        },
+        {
+          "name": "variable.language.edk2_fdf",
+          "match": "((?<!\\w)(ERASE_POLARITY|MEMORY_MAPPED|STICKY_WRITE|LOCK_CAP|LOCK_STATUS|WRITE_DISABLED_CAP|WRITE_ENABLED_CAP|WRITE_STATUS|WRITE_LOCK_CAP|WRITE_LOCK_STATUS|READ_DISABLED_CAP|READ_ENABLED_CAP|READ_STATUS|READ_LOCK_CAP|READ_LOCK_STATUS))(?!\\w)"
+        },
+        {
+          "name": "variable.parameter.edk2_fdf",
+          "match": "[\\w/-]+\\.[a-zA-Z]+"
+        },
+        {
+          "name": "keyword.control.edk2_fdf",
+          "match": "((?<!\\w)DEFINE)(?!\\w)|(?<=!)(if|endif|ifdef|ifndef|include|else)"
+        },
+        {
+          "name": "constant.numeric.edk2_fdf",
+          "match": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+        },
+        {
+          "name": "constant.numeric.edk2_fdf",
+          "match": "(?<!\\w)\\.?\\d(?:(?:[0-9a-zA-Z_\\.]|')|(?<=[eEpP])[+-])*"
+        },
+        {
+          "name": "constant.language.edk2_fdf",
+          "match": "((?<!\\w)TRUE|FALSE|NULL)(?!\\w)"
+        },
+        {
+          "name": "string.quoted.double.edk2_fdf",
+          "begin": "L\"|\"",
+          "end": "\""
+        },
+        {
+          "begin": "\\[",
+          "end": "\\]",
+          "patterns": [
+            {
+              "name": "string.quoted.double.edk2_fdf",
+              "match": "[a-zA-Z0-9.]+"
+            }
+          ]
+        },
+        {
+          "begin": "\\<",
+          "end": "\\>",
+          "patterns": [
+            {
+              "name": "string.quoted.double.edk2_fdf",
+              "match": "[a-zA-Z0-9.]+"
+            }
+          ]
+        },
+        {
+          "begin": "\\$\\(",
+          "end": "\\)",
+          "patterns": [
+            {
+              "name": "support.function.edk2_fdf",
+              "match": "[a-zA-Z0-9_]+"
+            }
+          ]
+        },
+        {
+          "name": "comment.line.number-sign.edk2_fdf",
+          "begin": "#|\/\/",
+          "end": "\n"
+        }
+      ]
+    }
+  },
+  "scopeName": "source.edk2_fdf"
 }

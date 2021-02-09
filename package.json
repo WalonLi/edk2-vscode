@@ -1,206 +1,206 @@
 {
-	"name": "edk2-vscode",
-	"displayName": "edk2-vscode",
-	"description": "",
-	"version": "1.0.3",
-	"publisher": "walonli",
-	"engines": {
-		"vscode": "^1.37.0"
-	},
-	"categories": [
-		"Language Packs",
-		"Other"
-	],
-	"activationEvents": [
-		"onLanguage:edk2_fdf",
-		"onLanguage:edk2_dsc",
-		"onLanguage:edk2_dec",
-		"onLanguage:edk2_inf",
-		"onLanguage:edk2_vfr"
-	],
-	"main": "./out/extension.js",
-	"contributes": {
-		"languages": [
-			{
-				"id": "edk2_dsc",
-				"extensions": [
-					".dsc"
-				],
-				"configuration": "./confs/edk2_dsc.conf.json"
-			},
-			{
-				"id": "edk2_dec",
-				"extensions": [
-					".dec"
-				],
-				"configuration": "./confs/edk2_dec.conf.json"
-			},
-			{
-				"id": "edk2_fdf",
-				"extensions": [
-					".fdf"
-				],
-				"configuration": "./confs/edk2_fdf.conf.json"
-			},
-			{
-				"id": "edk2_inf",
-				"extensions": [
-					".inf"
-				],
-				"configuration": "./confs/edk2_inf.conf.json"
-			},
-			{
-				"id": "edk2_uni",
-				"extensions": [
-					".uni"
-				],
-				"configuration": "./confs/edk2_uni.conf.json"
-			},
-			{
-				"id": "edk2_vfr",
-				"extensions": [
-					".vfr",
-					".Vfr",
-					".hfr"
-				],
-				"configuration": "./confs/edk2_vfr.conf.json"
-			}
-		],
-		"grammars": [
-			{
-				"language": "edk2_dsc",
-				"scopeName": "source.edk2_dsc",
-				"path": "./syntaxes/edk2_dsc.tmLanguage.json"
-			},
-			{
-				"language": "edk2_dec",
-				"scopeName": "source.edk2_dec",
-				"path": "./syntaxes/edk2_dec.tmLanguage.json"
-			},
-			{
-				"language": "edk2_fdf",
-				"scopeName": "source.edk2_fdf",
-				"path": "./syntaxes/edk2_fdf.tmLanguage.json"
-			},
-			{
-				"language": "edk2_inf",
-				"scopeName": "source.edk2_inf",
-				"path": "./syntaxes/edk2_inf.tmLanguage.json"
-			},
-			{
-				"language": "edk2_uni",
-				"scopeName": "source.edk2_uni",
-				"path": "./syntaxes/edk2_uni.tmLanguage.json"
-			},
-			{
-				"language": "edk2_vfr",
-				"scopeName": "source.edk2_vfr",
-				"path": "./syntaxes/edk2_vfr.tmLanguage.json"
-			}
-		],
-		"snippets": [
-			{
-				"language": "c",
-				"path": "./snippets/edk2_c.snippet.json"
-			},
-			{
-				"language": "cpp",
-				"path": "./snippets/edk2_c.snippet.json"
-			}
-		],
-		"commands": [
-			{
-				"command": "extension.buildDsc",
-				"title": "Build dsc"
-			},
-			{
-				"command": "extension.goToBuild",
-				"title": "Go to Build folder"
-			}
-		],
-		"menus": {
-			"explorer/context": [
-				{
-					"when": "resourceLangId == edk2_dsc",
-					"command": "extension.buildDsc"
-				},
-				{
-					"when": "resourceLangId == edk2_inf",
-					"command": "extension.goToBuild"
-				}
-			],
-			"editor/context": [
-				{
-					"when": "resourceLangId == edk2_dsc",
-					"command": "extension.buildDsc"
-				},
-				{
-					"when": "resourceLangId == edk2_inf",
-					"command": "extension.goToBuild"
-				}
-			]
-		},
-		"keybindings": [
-			{
-				"key": "ctrl+f1",
-				"command": "editor.action.insertSnippet",
-				"when": "resourceLangId == c || resourceLangId == cpp",
-				"args": {
-					"langId": "c",
-					"name": "debug_snippet"
-				}
-			}
-		],
-		"configuration": {
-			"title": "Edk2 Build Paramter",
-			"properties": {
-				"edk2-vscode.build.project": {
-					"type": "string",
-					"default": "EmulatorX64",
-					"description": "Specific edk2 build project (EmulatorIA32 / EmulatorX64 / OvmfX64 ...), plz refer https://github.com/tianocore/edk2"
-				},
-				"edk2-vscode.build.compiler": {
-					"type": "string",
-					"default": "VS2015x86",
-					"description": "Specific edk2 build compiler, plz refer https://github.com/tianocore/edk2"
-				},
-				"edk2-vscode.build.arch": {
-					"type": "string",
-					"default": "X64",
-					"description": "Specific edk2 build arch (IA32 / X64 / AARCH64 / ARM ...), plz refer https://github.com/tianocore/edk2"
-				},
-				"edk2-vscode.build.target": {
-					"type": "string",
-					"default": "DEBUG",
-					"description": "Specific edk2 build target (DEBUG / RELEASE / NOOPT), plz refer https://github.com/tianocore/edk2"
-				}
-			}
-		}
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile",
-		"test": "node ./out/test/runTest.js"
-	},
-	"devDependencies": {
-		"@types/glob": "^7.1.1",
-		"@types/mocha": "^5.2.6",
-		"@types/node": "^10.12.21",
-		"@types/vscode": "^1.37.0",
-		"glob": "^7.1.4",
-		"mocha": "^8.2.1",
-		"typescript": "^3.3.1",
-		"tslint": "^5.12.1",
-		"vscode-test": "^1.0.2"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/WalonLi/edk2-vscode.git"
-	},
-	"dependencies": {
-		"open-file-explorer": "^1.0.2"
-	},
-	"homepage": "https://github.com/WalonLi/edk2-vscode/blob/master/README.md"
+  "name": "edk2-vscode",
+  "displayName": "edk2-vscode",
+  "description": "",
+  "version": "1.0.3",
+  "publisher": "walonli",
+  "engines": {
+    "vscode": "^1.37.0"
+  },
+  "categories": [
+    "Language Packs",
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:edk2_fdf",
+    "onLanguage:edk2_dsc",
+    "onLanguage:edk2_dec",
+    "onLanguage:edk2_inf",
+    "onLanguage:edk2_vfr"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "edk2_dsc",
+        "extensions": [
+          ".dsc"
+        ],
+        "configuration": "./confs/edk2_dsc.conf.json"
+      },
+      {
+        "id": "edk2_dec",
+        "extensions": [
+          ".dec"
+        ],
+        "configuration": "./confs/edk2_dec.conf.json"
+      },
+      {
+        "id": "edk2_fdf",
+        "extensions": [
+          ".fdf"
+        ],
+        "configuration": "./confs/edk2_fdf.conf.json"
+      },
+      {
+        "id": "edk2_inf",
+        "extensions": [
+          ".inf"
+        ],
+        "configuration": "./confs/edk2_inf.conf.json"
+      },
+      {
+        "id": "edk2_uni",
+        "extensions": [
+          ".uni"
+        ],
+        "configuration": "./confs/edk2_uni.conf.json"
+      },
+      {
+        "id": "edk2_vfr",
+        "extensions": [
+          ".vfr",
+          ".Vfr",
+          ".hfr"
+        ],
+        "configuration": "./confs/edk2_vfr.conf.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "edk2_dsc",
+        "scopeName": "source.edk2_dsc",
+        "path": "./syntaxes/edk2_dsc.tmLanguage.json"
+      },
+      {
+        "language": "edk2_dec",
+        "scopeName": "source.edk2_dec",
+        "path": "./syntaxes/edk2_dec.tmLanguage.json"
+      },
+      {
+        "language": "edk2_fdf",
+        "scopeName": "source.edk2_fdf",
+        "path": "./syntaxes/edk2_fdf.tmLanguage.json"
+      },
+      {
+        "language": "edk2_inf",
+        "scopeName": "source.edk2_inf",
+        "path": "./syntaxes/edk2_inf.tmLanguage.json"
+      },
+      {
+        "language": "edk2_uni",
+        "scopeName": "source.edk2_uni",
+        "path": "./syntaxes/edk2_uni.tmLanguage.json"
+      },
+      {
+        "language": "edk2_vfr",
+        "scopeName": "source.edk2_vfr",
+        "path": "./syntaxes/edk2_vfr.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "c",
+        "path": "./snippets/edk2_c.snippet.json"
+      },
+      {
+        "language": "cpp",
+        "path": "./snippets/edk2_c.snippet.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "extension.buildDsc",
+        "title": "Build dsc"
+      },
+      {
+        "command": "extension.goToBuild",
+        "title": "Go to Build folder"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "resourceLangId == edk2_dsc",
+          "command": "extension.buildDsc"
+        },
+        {
+          "when": "resourceLangId == edk2_inf",
+          "command": "extension.goToBuild"
+        }
+      ],
+      "editor/context": [
+        {
+          "when": "resourceLangId == edk2_dsc",
+          "command": "extension.buildDsc"
+        },
+        {
+          "when": "resourceLangId == edk2_inf",
+          "command": "extension.goToBuild"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "key": "ctrl+f1",
+        "command": "editor.action.insertSnippet",
+        "when": "resourceLangId == c || resourceLangId == cpp",
+        "args": {
+          "langId": "c",
+          "name": "debug_snippet"
+        }
+      }
+    ],
+    "configuration": {
+      "title": "Edk2 Build Paramter",
+      "properties": {
+        "edk2-vscode.build.project": {
+          "type": "string",
+          "default": "EmulatorX64",
+          "description": "Specific edk2 build project (EmulatorIA32 / EmulatorX64 / OvmfX64 ...), plz refer https://github.com/tianocore/edk2"
+        },
+        "edk2-vscode.build.compiler": {
+          "type": "string",
+          "default": "VS2015x86",
+          "description": "Specific edk2 build compiler, plz refer https://github.com/tianocore/edk2"
+        },
+        "edk2-vscode.build.arch": {
+          "type": "string",
+          "default": "X64",
+          "description": "Specific edk2 build arch (IA32 / X64 / AARCH64 / ARM ...), plz refer https://github.com/tianocore/edk2"
+        },
+        "edk2-vscode.build.target": {
+          "type": "string",
+          "default": "DEBUG",
+          "description": "Specific edk2 build target (DEBUG / RELEASE / NOOPT), plz refer https://github.com/tianocore/edk2"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^10.12.21",
+    "@types/vscode": "^1.37.0",
+    "glob": "^7.1.4",
+    "mocha": "^8.2.1",
+    "typescript": "^3.3.1",
+    "tslint": "^5.12.1",
+    "vscode-test": "^1.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WalonLi/edk2-vscode.git"
+  },
+  "dependencies": {
+    "open-file-explorer": "^1.0.2"
+  },
+  "homepage": "https://github.com/WalonLi/edk2-vscode/blob/master/README.md"
 }
