@@ -2,7 +2,6 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import * as rd from 'readline';
 
 
 class Common {
@@ -56,6 +55,41 @@ class Common {
 						' -b ' +
 						(config.has('build.target') ? config.get('build.target') : 'DEBUG');
 		vscode.window.terminals[0].sendText('cmd.exe /K \"edksetup.bat & Build' + parameter + '\"');
+	}
+
+	static goToBuild (...args: any[])
+	{
+		let openExplorer = require ('open-file-explorer');
+		let os = require('os');
+		let config = vscode.workspace.getConfiguration('edk2-vscode');
+
+		if (vscode.workspace.workspaceFolders) {
+			let inf = args[0].path.substring(1 + vscode.workspace.workspaceFolders[0].uri.fsPath.length).replace(/.inf$/g, '');
+			let dict = vscode.workspace.workspaceFolders[0].uri.fsPath.replace(/\\/g, '/') +
+					'/' +
+					'Build' +
+					'/' +
+					(config.has('build.project') ? config.get('build.project') : 'EmulatorX64') +
+					'/' +
+					(config.has('build.target') ? config.get('build.target') : 'DEBUG') +
+					'_' +
+					(config.has('build.compiler') ? config.get('build.compiler') : 'VS2015x86') +
+					'/';
+			let archs = ['IA32', 'X64', 'EBC', 'ARM', 'AARCH64'];
+			for (let arch of archs) {
+				let full_path = dict + arch + inf;
+				if (fs.existsSync(full_path)) {
+					// openExplorer only accept '\\' in windows.
+					if (os.platform() == 'win32') {
+						openExplorer(full_path.replace(/\//g, '\\'), () => {});
+					} else {
+						openExplorer(full_path, () => {});
+					}
+					return;
+				}
+			}
+			vscode.window.showInformationMessage('Not found - ' + inf);
+		}
 	}
 }
 
@@ -305,6 +339,7 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_vfr' }, new Edk2VfrProvider());
 
 	context.subscriptions.push(vscode.commands.registerCommand('extension.buildDsc', Common.buildDsc));
+	context.subscriptions.push(vscode.commands.registerCommand('extension.goToBuild', Common.goToBuild));
 }
 
 // this method is called when your extension is deactivated
