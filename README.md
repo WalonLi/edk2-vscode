@@ -28,6 +28,15 @@ Name            |Alias
 
 ![](demo/snippet.gif)
 
+## Build
+Functions       |How
+----------------|-------
+**Build dsc**   |Right click on dsc file in explorer/editor
+**Go to build** |Right click on inf file in explorer/editor
+**Settings**    |File > Preferences > Settings > Extensions > Edk2 Build Setting
+
+![](demo/build_setting.jpg)
+
 ```
 GNU GENERAL PUBLIC LICENSE
 Copyright (C) 2019-2021  WalonLi

@@ -88,7 +88,7 @@ class Common {
           return;
         }
       }
-      vscode.window.showInformationMessage('Not found - ' + inf);
+      vscode.window.showInformationMessage('Not found in build - ' + inf);
     }
   }
 }

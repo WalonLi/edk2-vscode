@@ -2,7 +2,7 @@
   "name": "edk2-vscode",
   "displayName": "edk2-vscode",
   "description": "",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "publisher": "walonli",
   "engines": {
     "vscode": "^1.37.0"
@@ -152,7 +152,7 @@
       }
     ],
     "configuration": {
-      "title": "Edk2 Build Paramter",
+      "title": "Edk2 Build Setting",
       "properties": {
         "edk2-vscode.build.project": {
           "type": "string",
