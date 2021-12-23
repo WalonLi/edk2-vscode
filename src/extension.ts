@@ -43,8 +43,7 @@ class Common {
     return null;
   }
 
-  static buildDsc (...args: any[])
-  {
+  static buildDsc (...args: any[]) {
     let os = require('os');
     let config = vscode.workspace.getConfiguration('edk2-vscode');
     let parameter = ' -p ' +
@@ -62,8 +61,7 @@ class Common {
     }
   }
 
-  static goToBuild (...args: any[])
-  {
+  static goToBuild (...args: any[]) {
     let openExplorer = require('open-file-explorer');
     let os = require('os');
     let config = vscode.workspace.getConfiguration('edk2-vscode');
@@ -100,7 +98,7 @@ class Common {
 
 /*
 */
-class Edk2FdfProvider implements vscode.DefinitionProvider {
+class Edk2FdfDefinitionProvider implements vscode.DefinitionProvider {
   provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
     let dest = Common.removeHashTagComment(document.lineAt(position).text);
 
@@ -119,7 +117,7 @@ class Edk2FdfProvider implements vscode.DefinitionProvider {
 
 /*
 */
-class Edk2DscProvider implements vscode.DefinitionProvider {
+class Edk2DscDefinitionProvider implements vscode.DefinitionProvider {
   provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
 
     let dest = document.lineAt(position).text.replace(/#.*/g, '')   // comments
@@ -142,7 +140,7 @@ class Edk2DscProvider implements vscode.DefinitionProvider {
 
 /*
 */
-class Edk2DecProvider implements vscode.DefinitionProvider {
+class Edk2DecDefinitionProvider implements vscode.DefinitionProvider {
   provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
     // check destination file.
     let dest = document.lineAt(position).text.replace(/#.*/g, '')   // comments
@@ -187,7 +185,7 @@ class Edk2DecProvider implements vscode.DefinitionProvider {
 
 /*
 */
-class Edk2InfProvider implements vscode.DefinitionProvider {
+class Edk2InfDefinitionProvider implements vscode.DefinitionProvider {
   provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
     let dest = Common.removeHashTagComment(document.lineAt(position).text);
     let associate_c_files: Array<string> = [];
@@ -286,7 +284,7 @@ class Edk2InfProvider implements vscode.DefinitionProvider {
   Only support VFR => UNI/H destination function in same folder.
   Only support UTF8. (Some edk2 files is UCS2(UTF16) format and we don't support so far.)
 */
-class Edk2VfrProvider implements vscode.DefinitionProvider {
+class Edk2VfrDefinitionProvider implements vscode.DefinitionProvider {
   provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
     let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
     let word = document.getText(document.getWordRangeAtPosition(position));
@@ -316,6 +314,73 @@ class Edk2VfrProvider implements vscode.DefinitionProvider {
   }
 }
 
+/*
+*/
+class Edk2DscSymbolProvider implements vscode.DocumentSymbolProvider {
+  public provideDocumentSymbols(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.DocumentSymbol[]> {
+
+    let keywords = new Map <string, vscode.SymbolKind>([
+      ['Pcd', vscode.SymbolKind.Variable],
+      ['Component', vscode.SymbolKind.File],
+      ['Library', vscode.SymbolKind.Package]
+    ]);
+
+    return new Promise((resolve, reject) => {
+      let symbols: vscode.DocumentSymbol[] = [];
+      let nodes = [symbols];
+
+      for (let i = 0; i < document.lineCount; i++) {
+        let keyword_line = document.lineAt(i);
+        let keyword_text = Common.removeHashTagComment(keyword_line.text);
+
+        let m = '';
+        keywords.forEach((v, k) => {if (keyword_text.includes(k)) m = k;});
+        if (m.length && keyword_text.match(/\[[a-zA-Z0-9.]+\]/g)) {
+          let j = i + 1;
+          let keyword_symbol = new vscode.DocumentSymbol(keyword_text, '', vscode.SymbolKind.Class, keyword_line.range, keyword_line.range);
+          
+          nodes[nodes.length-1].push(keyword_symbol)
+          nodes.push(keyword_symbol.children)
+
+          let brace = false;
+          for (; j < document.lineCount; j++) {
+            let element_line = document.lineAt(j);
+            let element_text = Common.removeHashTagComment(element_line.text).replace(/\|.*/g, '');
+
+            // skip empty line and control symbol
+            if (element_text.length === 0 || element_text[0] === '!') {
+              continue;
+            }
+
+            // brace inside.
+            if (element_text[0] === '}') {
+              brace = false;
+              continue;
+            } else if (brace) {
+              continue;
+            }
+            if (element_text[element_text.length - 1] === '{') {
+              brace = true;
+            }
+            
+
+            // next keyword!
+            if (element_text[0] === '[') {
+              break;
+            }
+            
+            let symbol = new vscode.DocumentSymbol(element_text, '', keywords.get(m)!, element_line.range, element_line.range);
+            nodes[nodes.length-1].push(symbol)
+          }
+          nodes.pop()
+          i = j - 1;
+        }
+      }
+      resolve(symbols);
+    });
+  }
+}
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -337,11 +402,13 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(disposable);
   */
-  vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_fdf' }, new Edk2FdfProvider());
-  vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_dsc' }, new Edk2DscProvider());
-  vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_dec' }, new Edk2DecProvider());
-  vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_inf' }, new Edk2InfProvider());
-  vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_vfr' }, new Edk2VfrProvider());
+  vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_fdf' }, new Edk2FdfDefinitionProvider());
+  vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_dsc' }, new Edk2DscDefinitionProvider());
+  vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_dec' }, new Edk2DecDefinitionProvider());
+  vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_inf' }, new Edk2InfDefinitionProvider());
+  vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_vfr' }, new Edk2VfrDefinitionProvider());
+
+  vscode.languages.registerDocumentSymbolProvider({ scheme: 'file', language: 'edk2_dsc' }, new Edk2DscSymbolProvider());
 
   context.subscriptions.push(vscode.commands.registerCommand('extension.buildDsc', Common.buildDsc));
   context.subscriptions.push(vscode.commands.registerCommand('extension.goToBuild', Common.goToBuild));
