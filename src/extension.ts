@@ -49,7 +49,7 @@ class Common {
       let folder: string[] = [vscode.workspace.workspaceFolders[0].uri.fsPath];
       
       if (config.has('root.extend.path')) {
-        let s: string = config.get('root.extend.path')!
+        let s: string = config.get('root.extend.path') + '';
         s.replace(/\s/g, '').split(',').forEach(function(v) {
           folder.push(vscode.workspace.workspaceFolders![0].uri.fsPath + '/' + v);
         });

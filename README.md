@@ -18,6 +18,11 @@ Extension       |Functions
 ## Comment Toggling (Ctrl+/)
 * DEC/DSC/FDF/INF/UNI/VFR
 
+## Code Outline (Ctrl+/)
+* DEC/DSC/INF
+
+![](demo/outline.jpg)
+
 ## Snippet
 Name            |Alias
 ----------------|-------

@@ -4,6 +4,14 @@ All notable changes to the "edk2-vscode" extension will be documented in this fi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+> ### 1.0.5
+> 1. New feature - code outline, root extend path.
+> 2. Bug fix
+
+> ### 1.0.4
+> 1. New feature - dsc build and go to build
+> 2. Bug fix
+
 > ### 1.0.3
 > 1. Fix some destination hotkey issues.
 > 2. Support snippets
