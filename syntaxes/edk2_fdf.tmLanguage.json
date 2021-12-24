@@ -23,7 +23,7 @@
         },
         {
           "name": "keyword.control.edk2_fdf",
-          "match": "((?<!\\w)DEFINE)(?!\\w)|(?<=!)(if|endif|ifdef|ifndef|include|else)"
+          "match": "((?<!\\w)DEFINE)(?!\\w)|(?<=!)(ifdef|ifndef|if|endif|include|else)"
         },
         {
           "name": "constant.numeric.edk2_fdf",

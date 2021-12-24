@@ -173,6 +173,11 @@
           "type": "string",
           "default": "DEBUG",
           "description": "Specific edk2 build target (DEBUG / RELEASE / NOOPT), plz refer https://github.com/tianocore/edk2"
+        },
+        "edk2-vscode.root.extend.path": {
+          "type": "string",
+          "default": "",
+          "description": "Specific root paths for parsing associate files. i.e. aaa, bbb, ccc"
         }
       }
     }
