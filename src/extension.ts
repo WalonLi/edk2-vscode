@@ -381,6 +381,62 @@ class Edk2DscSymbolProvider implements vscode.DocumentSymbolProvider {
   }
 }
 
+/*
+*/
+class Edk2DecSymbolProvider implements vscode.DocumentSymbolProvider {
+  public provideDocumentSymbols(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.DocumentSymbol[]> {
+
+    let keywords = new Map <string, vscode.SymbolKind>([
+      ['Pcd', vscode.SymbolKind.Variable],
+      ['Library', vscode.SymbolKind.Package],
+      ['Guids', vscode.SymbolKind.Interface],
+      ['Ppis', vscode.SymbolKind.Interface],
+      ['Protocols', vscode.SymbolKind.Interface],
+    ]);
+
+    return new Promise((resolve, reject) => {
+      let symbols: vscode.DocumentSymbol[] = [];
+      let nodes = [symbols];
+
+      for (let i = 0; i < document.lineCount; i++) {
+        let keyword_line = document.lineAt(i);
+        let keyword_text = Common.removeHashTagComment(keyword_line.text);
+
+        let m = '';
+        keywords.forEach((v, k) => {if (keyword_text.includes(k)) m = k;});
+        if (m.length && keyword_text.match(/\[[a-zA-Z0-9.]+\]/g)) {
+          let j = i + 1;
+          let keyword_symbol = new vscode.DocumentSymbol(keyword_text, '', vscode.SymbolKind.Class, keyword_line.range, keyword_line.range);
+          
+          nodes[nodes.length-1].push(keyword_symbol)
+          nodes.push(keyword_symbol.children)
+
+          for (; j < document.lineCount; j++) {
+            let element_line = document.lineAt(j);
+            let element_text = Common.removeHashTagComment(element_line.text).replace(/\|.*/g, '').replace(/\=.*/g, '');
+
+            // skip empty line
+            if (element_text.length === 0) {
+              continue;
+            }
+
+            // next keyword!
+            if (element_text[0] === '[') {
+              break;
+            }
+            
+            let symbol = new vscode.DocumentSymbol(element_text, '', keywords.get(m)!, element_line.range, element_line.range);
+            nodes[nodes.length-1].push(symbol)
+          }
+          nodes.pop()
+          i = j - 1;
+        }
+      }
+      resolve(symbols);
+    });
+  }
+}
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -409,6 +465,7 @@ export function activate(context: vscode.ExtensionContext) {
   vscode.languages.registerDefinitionProvider({ scheme: 'file', language: 'edk2_vfr' }, new Edk2VfrDefinitionProvider());
 
   vscode.languages.registerDocumentSymbolProvider({ scheme: 'file', language: 'edk2_dsc' }, new Edk2DscSymbolProvider());
+  vscode.languages.registerDocumentSymbolProvider({ scheme: 'file', language: 'edk2_dec' }, new Edk2DecSymbolProvider());
 
   context.subscriptions.push(vscode.commands.registerCommand('extension.buildDsc', Common.buildDsc));
   context.subscriptions.push(vscode.commands.registerCommand('extension.goToBuild', Common.goToBuild));
