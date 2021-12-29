@@ -119,7 +119,7 @@ class Edk2FdfDefinitionProvider implements vscode.DefinitionProvider {
     let dest = Common.removeHashTagComment(document.lineAt(position).text);
 
     // Check INF prefix
-    if (dest.match(/^INF[a-zA-Z0-9\s]+/g)) {
+    if (dest.match(/^INF[\w\s]+/g)) {
       let folders = Common.getRootPath();
       for (let i = 0; i < folders.length; i++) {
         let full_dest = folders[i] + '/' + dest.replace(/^INF[\s]+/g, '');
@@ -139,12 +139,13 @@ class Edk2DscDefinitionProvider implements vscode.DefinitionProvider {
     let dest = document.lineAt(position).text.replace(/#.*/g, '')   // comments
                        .replace(/^\s*/g, '')                        // front blank
                        .replace(/[\s\{\}]*$/g, '')                  // tail "{", "}"" and blank
-                       .replace(/[a-zA-Z0-9\s]+\|/g, '');           // front "|" and blank
+                       .replace(/[\w\s]+\|/g, '');                  // front "|" and blank
 
     if (dest.match(/^(!include )/g)) {
       dest = dest.replace(/^(!include )/g, '');
     }
 
+    // Files
     let folders = Common.getRootPath();
     for (let i = 0; i < folders.length; i++) {
       let full_dest = folders[i] + '/' + dest;
@@ -152,6 +153,9 @@ class Edk2DscDefinitionProvider implements vscode.DefinitionProvider {
         return new vscode.Location(vscode.Uri.file(full_dest), new vscode.Position(0, 0));
       }
     }
+
+    // TO-DO: PCDs
+    // ...
   }
 }
 
@@ -163,7 +167,7 @@ class Edk2DecDefinitionProvider implements vscode.DefinitionProvider {
     let dest = document.lineAt(position).text.replace(/#.*/g, '')   // comments
                        .replace(/^\s*/g, '')                        // front blank  
                        .replace(/[\s\{\}]*$/g, '')                  // tail "{", "}"" and blank
-                       .replace(/[a-zA-Z0-9\s]+\|/g, '');           // front "|" and blank
+                       .replace(/[\w\s]+\|/g, '');                  // front "|" and blank
     if (!dest.substring(dest.length - 2).match('.h')) {
       return;
     }
@@ -171,18 +175,18 @@ class Edk2DecDefinitionProvider implements vscode.DefinitionProvider {
     //
     // TO-DO: Should parse DEC only once when opening *.dec.
     //
-    let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
+    let parent_path = document.uri.fsPath.replace(/[\w\.]*$/g, '');
     // console.log(parent_path);
 
     let directory = [parent_path + dest];
     for (let i = 0; i < document.lineCount; i++) {
       let content = document.lineAt(i).text.trim();
-      if (content.match('\\[Includes\\]')) {
+      if (content.match(/\[Includes\]/)) {
         for (i += 1; i < document.lineCount; i++) {
           let folder = document.lineAt(i).text.trim();
           if (folder.length === 0) {
             continue;
-          } else if (folder[0].match('\\[')) {
+          } else if (folder[0].match(/\[/)) {
             i = document.lineCount; // as break;
           } else {
             directory.push(parent_path + folder + '/' + dest);
@@ -211,18 +215,18 @@ class Edk2InfDefinitionProvider implements vscode.DefinitionProvider {
     // Parse dec/c files
     for (let i = 0; i < document.lineCount; i++) {
       let line = Common.removeHashTagComment(document.lineAt(i).text.toUpperCase());
-      if (line.match(/\[SOURCES[a-zA-Z\.]*\]/g)) {
+      if (line.match(/\[SOURCES[\w\.]*\]/g)) {
         i = Common.pushMatchContent(document, i + 1, document.lineCount, associate_c_files);
-      } else if (line.match(/\[PACKAGES[a-zA-Z\.]*\]/g)) {
+      } else if (line.match(/\[PACKAGES[\w\.]*\]/g)) {
         i = Common.pushMatchContent(document, i + 1, document.lineCount, associate_dec_files);
       }
     }
 
     // console.log(dest, dest.match(/^[a-zA-Z0-9_\/]+\.[a-zA-Z0-9]+$/g));
-    if (dest.match(/^[a-zA-Z0-9_\-\/]+\.[a-zA-Z0-9_\-]+$/g)) {
+    if (dest.match(/^[\w\-\/]+\.[\w\-]+$/g)) {
       // format: ****.***
 
-      let file_extension = dest.replace(/^[a-zA-Z0-9_\-\/]+/g, '');
+      let file_extension = dest.replace(/^[\w\-\/]+/g, '');
       // console.log('extension ' + file_extension);
       if (file_extension.match('.dec')) {
         //
@@ -237,7 +241,7 @@ class Edk2InfDefinitionProvider implements vscode.DefinitionProvider {
         }
       } else {
 
-        let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9_\-\.]*$/g, '');
+        let parent_path = document.uri.fsPath.replace(/[\w\-\.]*$/g, '');
         // console.log(parent_path+dest);
         if (fs.existsSync(parent_path + dest)) {
           //
@@ -248,10 +252,13 @@ class Edk2InfDefinitionProvider implements vscode.DefinitionProvider {
           //
           // pcd
           //
-          if (associate_dec_files.length > 0 && vscode.workspace.workspaceFolders) {
-            let root_path = vscode.workspace.workspaceFolders[0].uri.fsPath + '/';
-
-            return Common.searchPatternInFiles(associate_dec_files, root_path, dest);
+          if (associate_dec_files.length > 0) {
+            let folders = Common.getRootPath();
+            for (let i = 0; i < folders.length; i++) {
+              let root_path = folders[i] + '/';
+              let result = Common.searchPatternInFiles(associate_dec_files, root_path, dest);
+              if (result) return result;
+            }
           }
         }
       }
@@ -264,25 +271,28 @@ class Edk2InfDefinitionProvider implements vscode.DefinitionProvider {
         // Guid
         //
 
-        // Only support Protocols and Guids section
+        // Only support Protocols, Ppis, Guids and Depex section
         let supportable = false;
         for (let i = position.line; i > 0; i--) {
           let line = Common.removeHashTagComment(document.lineAt(i).text.toUpperCase());
           if (line[0] === '[') {
-            if (line.match(/\[PROTOCOLS[a-zA-Z\.]*\]/g) ||
-              line.match(/\[GUIDS[a-zA-Z\.]*\]/g) ||
-              line.match(/\[PPIS[a-zA-Z\.]*\]/g) ||
-              line.match(/\[DEPEX[a-zA-Z\.]*\]/g)) {
+            if (line.match(/\[PROTOCOLS[\w\.]*\]/g) ||
+              line.match(/\[GUIDS[\w\.]*\]/g) ||
+              line.match(/\[PPIS[\w\.]*\]/g) ||
+              line.match(/\[DEPEX[\w\.]*\]/g)) {
 
               supportable = true;
             }
             break;
           }
         }
-        if (supportable && associate_dec_files.length > 0 && vscode.workspace.workspaceFolders) {
-          let root_path = vscode.workspace.workspaceFolders[0].uri.fsPath + '/';
-          
-          return Common.searchPatternInFiles(associate_dec_files, root_path, table[0]);
+        if (supportable && associate_dec_files.length > 0) {
+          let folders = Common.getRootPath();
+          for (let i = 0; i < folders.length; i++) {
+            let root_path = folders[i] + '/';
+            let result = Common.searchPatternInFiles(associate_dec_files, root_path, table[0]);
+            if (result) return result;
+          }
         }
       } else if (table.length === 2 && associate_c_files.length > 0 && keywords.includes(table[0])) {
         //
@@ -290,7 +300,7 @@ class Edk2InfDefinitionProvider implements vscode.DefinitionProvider {
         //
 
         // table[0] = keywords, table[1] = function name;
-        let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
+        let parent_path = document.uri.fsPath.replace(/[\w\.]*$/g, '');
         // console.log(parent_path);
         return Common.searchPatternInFiles(associate_c_files, parent_path, table[1]);
       }
@@ -304,7 +314,7 @@ class Edk2InfDefinitionProvider implements vscode.DefinitionProvider {
 */
 class Edk2VfrDefinitionProvider implements vscode.DefinitionProvider {
   provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
-    let parent_path = document.uri.fsPath.replace(/[a-zA-Z0-9\.]*$/g, '');
+    let parent_path = document.uri.fsPath.replace(/[\w\.]*$/g, '');
     let word = document.getText(document.getWordRangeAtPosition(position));
     let string_token_reg = new RegExp('.*' + 'STRING_TOKEN' + '\\s*' + '\\(' + word + '\\)' + '.*');
     let header_file_reg = new RegExp('.*' + '\\#include' + '.*');
@@ -353,7 +363,7 @@ class Edk2DscSymbolProvider implements vscode.DocumentSymbolProvider {
 
         let m = '';
         keywords.forEach((v, k) => {if (keyword_text.includes(k)) m = k;});
-        if (m.length && keyword_text.match(/\[[a-zA-Z0-9.]+\]/g)) {
+        if (m.length && keyword_text.match(/\[[\w\.]+\]/g)) {
           let j = i + 1;
           let keyword_symbol = new vscode.DocumentSymbol(keyword_text, '', vscode.SymbolKind.Class, keyword_line.range, keyword_line.range);
           
@@ -421,7 +431,7 @@ class Edk2DecSymbolProvider implements vscode.DocumentSymbolProvider {
 
         let m = '';
         keywords.forEach((v, k) => {if (keyword_text.includes(k)) m = k;});
-        if (m.length && keyword_text.match(/\[[a-zA-Z0-9.]+\]/g)) {
+        if (m.length && keyword_text.match(/\[[\w\.]+\]/g)) {
           let j = i + 1;
           let keyword_symbol = new vscode.DocumentSymbol(keyword_text, '', vscode.SymbolKind.Class, keyword_line.range, keyword_line.range);
           
@@ -480,7 +490,7 @@ class Edk2InfSymbolProvider implements vscode.DocumentSymbolProvider {
 
         let m = '';
         keywords.forEach((v, k) => {if (keyword_text.includes(k)) m = k;});
-        if (m.length && keyword_text.match(/\[[a-zA-Z0-9.]+\]/g)) {
+        if (m.length && keyword_text.match(/\[[\w\.]+\]/g)) {
           let j = i + 1;
           let keyword_symbol = new vscode.DocumentSymbol(keyword_text, '', vscode.SymbolKind.Class, keyword_line.range, keyword_line.range);
           
