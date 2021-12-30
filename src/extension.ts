@@ -363,16 +363,18 @@ class Edk2DscSymbolProvider implements vscode.DocumentSymbolProvider {
 
         let m = '';
         keywords.forEach((v, k) => {if (keyword_text.includes(k)) m = k;});
-        if (m.length && keyword_text.match(/\[[\w\.]+\]/g)) {
-          let j = i + 1;
+        if (m.length && keyword_text.match(/\[[\s\w.,]+\]/g)) {
+          let j;
           let keyword_symbol = new vscode.DocumentSymbol(keyword_text, '', vscode.SymbolKind.Class, keyword_line.range, keyword_line.range);
           
-          nodes[nodes.length-1].push(keyword_symbol)
-          nodes.push(keyword_symbol.children)
+          nodes[nodes.length-1].push(keyword_symbol);
+          nodes.push(keyword_symbol.children);
 
           let brace = false;
-          for (; j < document.lineCount; j++) {
-            let element_line = document.lineAt(j);
+          let element_line = keyword_line;
+          let pre_element_range_end = element_line.range.end;
+          for (j = i + 1; j < document.lineCount; j++, pre_element_range_end = element_line.range.end) {
+            element_line = document.lineAt(j);
             let element_text = Common.removeHashTagComment(element_line.text).replace(/\|.*/g, '');
 
             // skip empty line and control symbol
@@ -397,9 +399,11 @@ class Edk2DscSymbolProvider implements vscode.DocumentSymbolProvider {
             }
             
             let symbol = new vscode.DocumentSymbol(element_text, '', keywords.get(m)!, element_line.range, element_line.range);
-            nodes[nodes.length-1].push(symbol)
+            nodes[nodes.length-1].push(symbol);
           }
-          nodes.pop()
+
+          keyword_symbol.range = new vscode.Range(keyword_symbol.range.start, pre_element_range_end);
+          nodes.pop();
           i = j - 1;
         }
       }
@@ -431,15 +435,17 @@ class Edk2DecSymbolProvider implements vscode.DocumentSymbolProvider {
 
         let m = '';
         keywords.forEach((v, k) => {if (keyword_text.includes(k)) m = k;});
-        if (m.length && keyword_text.match(/\[[\w\.]+\]/g)) {
-          let j = i + 1;
+        if (m.length && keyword_text.match(/\[[\s\w.,]+\]/g)) {
+          let j;
           let keyword_symbol = new vscode.DocumentSymbol(keyword_text, '', vscode.SymbolKind.Class, keyword_line.range, keyword_line.range);
           
-          nodes[nodes.length-1].push(keyword_symbol)
-          nodes.push(keyword_symbol.children)
+          nodes[nodes.length-1].push(keyword_symbol);
+          nodes.push(keyword_symbol.children);
 
-          for (; j < document.lineCount; j++) {
-            let element_line = document.lineAt(j);
+          let element_line = keyword_line;
+          let pre_element_range_end = element_line.range.end;
+          for (j = i + 1; j < document.lineCount; j++, pre_element_range_end = element_line.range.end) {
+            element_line = document.lineAt(j);
             let element_text = Common.removeHashTagComment(element_line.text).replace(/\|.*/g, '').replace(/\=.*/g, '');
 
             // skip empty line
@@ -453,9 +459,11 @@ class Edk2DecSymbolProvider implements vscode.DocumentSymbolProvider {
             }
 
             let symbol = new vscode.DocumentSymbol(element_text, '', keywords.get(m)!, element_line.range, element_line.range);
-            nodes[nodes.length-1].push(symbol)
+            nodes[nodes.length-1].push(symbol);
           }
-          nodes.pop()
+
+          keyword_symbol.range = new vscode.Range(keyword_symbol.range.start, pre_element_range_end);
+          nodes.pop();
           i = j - 1;
         }
       }
@@ -490,16 +498,18 @@ class Edk2InfSymbolProvider implements vscode.DocumentSymbolProvider {
 
         let m = '';
         keywords.forEach((v, k) => {if (keyword_text.includes(k)) m = k;});
-        if (m.length && keyword_text.match(/\[[\w\.]+\]/g)) {
-          let j = i + 1;
+        if (m.length && keyword_text.match(/\[[\s\w.,]+\]/g)) {
+          let j;
           let keyword_symbol = new vscode.DocumentSymbol(keyword_text, '', vscode.SymbolKind.Class, keyword_line.range, keyword_line.range);
           
-          nodes[nodes.length-1].push(keyword_symbol)
-          nodes.push(keyword_symbol.children)
+          nodes[nodes.length-1].push(keyword_symbol);
+          nodes.push(keyword_symbol.children);
 
           let brace = false;
-          for (; j < document.lineCount; j++) {
-            let element_line = document.lineAt(j);
+          let element_line = keyword_line;
+          let pre_element_range_end = element_line.range.end;
+          for (j = i + 1; j < document.lineCount; j++, pre_element_range_end = element_line.range.end) {
+            element_line = document.lineAt(j);
             let element_text = Common.removeHashTagComment(element_line.text).replace(/AND.*/g, '');
 
             // skip empty line and control symbol
@@ -524,9 +534,11 @@ class Edk2InfSymbolProvider implements vscode.DocumentSymbolProvider {
             }
             
             let symbol = new vscode.DocumentSymbol(element_text, '', keywords.get(m)!, element_line.range, element_line.range);
-            nodes[nodes.length-1].push(symbol)
+            nodes[nodes.length-1].push(symbol);
           }
-          nodes.pop()
+
+          keyword_symbol.range = new vscode.Range(keyword_symbol.range.start, pre_element_range_end);
+          nodes.pop();
           i = j - 1;
         }
       }
