@@ -4,6 +4,11 @@ All notable changes to the "edk2-vscode" extension will be documented in this fi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+> ### 1.0.6
+> 1. New feature - add instance type in breadcrumbs
+> 2. Tune fdf syntaxt color
+> 3. Bug fix
+
 > ### 1.0.5
 > 1. New feature - code outline, root extend path.
 > 2. Bug fix

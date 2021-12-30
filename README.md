@@ -21,7 +21,7 @@ Extension       |Functions
 ## Code Outline (Ctrl+/)
 * DEC/DSC/INF
 
-![](demo/outline.jpg)
+![](demo/outline.jpg) ![](demo/breadcrumbs.jpg)
 
 ## Snippet
 Name            |Alias
