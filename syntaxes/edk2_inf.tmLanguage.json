@@ -19,7 +19,7 @@
         },
         {
           "name": "variable.parameter.edk2_inf",
-          "match": "[\\w/-]+\\.(dec|c|uni|h|vfr|Vfr|hfr|asm|nasm|S|asl|aslc)"
+          "match": "[\\w/-]+\\.(dec|c|uni|hfr|h|vfr|Vfr|asm|nasm|S|asl|aslc)"
         },
         {
           "name": "constant.numeric.edk2_inf",

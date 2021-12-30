@@ -14,7 +14,7 @@
       "patterns": [
         {
           "name": "variable.language.edk2_uni",
-          "match": "(?<=\\#)(string|language)"
+          "match": "(?<=\\#)(string|language|langdef|fontdef|font)"
         }
       ]
     }
