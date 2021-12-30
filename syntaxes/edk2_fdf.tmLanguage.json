@@ -10,16 +10,31 @@
     "edk2_fdf_color": {
       "patterns": [
         {
-          "name": "variable.language.edk2_fdf",
-          "match": "((?<!\\w)(BaseAddress|Size|ErasePolarity|BlockSize|NumBlocks|FV|FD|FvAlignment|FvNameGuid))(?!\\w)"
+          "//": "TO-DO: Too much specific keywords in FDF, should revisit for finding better way of color syntax."
         },
         {
           "name": "variable.language.edk2_fdf",
-          "match": "((?<!\\w)(ERASE_POLARITY|MEMORY_MAPPED|STICKY_WRITE|LOCK_CAP|LOCK_STATUS|WRITE_DISABLED_CAP|WRITE_ENABLED_CAP|WRITE_STATUS|WRITE_LOCK_CAP|WRITE_LOCK_STATUS|READ_DISABLED_CAP|READ_ENABLED_CAP|READ_STATUS|READ_LOCK_CAP|READ_LOCK_STATUS))(?!\\w)"
+          "match": "((?<!\\w)(FD|BaseAddress|Size|ErasePolarity|BlockSize|NumBlocks|RuleOverride|FV|SET|INF|USE|FILE|DATA))(?!\\w)"
+        },
+        {
+          "name": "variable.language.edk2_fdf",
+          "match": "((?<!\\w)(FvBaseAddress|FvForceRebase|FvAlignment|FileSystemGuid|FvNameGuid|FvUsedSizeEnable|FvNameString))(?!\\w)"
+        },
+        {
+          "name": "variable.language.edk2_fdf",
+          "match": "((?<!\\w)(MEMORY_MAPPED|LOCK_CAP|LOCK_STATUS|WRITE_LOCK_CAP|WRITE_LOCK_STATUS|WRITE_ENABLED_CAP|WRITE_DISABLED_CAP|WRITE_STATUS|STICKY_WRITE|WRITE_POLICY_RELIABLE|READ_LOCK_CAP|READ_LOCK_STATUS|READ_ENABLED_CAP|READ_DISABLED_CAP|READ_STATUS|ERASE_POLARITY))(?!\\w)"
+        },
+        {
+          "name": "support.type.edk2_fdf",
+          "match": "((?<!\\w)(SEC|PEI_CORE|PEIM|FREEFORM|PEI_DXE_COMBO|DRIVER|DXE_CORE|APPLICATION|SMM_CORE|SMM))(?!\\w)"
+        },
+        {
+          "name": "support.type.edk2_fdf",
+          "match": "((?<!\\w)(SECTION|GUIDED|VERSION|UI|FV_IMAGE|COMPAT16|PE32|PIC|TE|RAW|DXE_DEPEX|SMM|DEPEX|PEI_DEPEX))(?!\\w)"
         },
         {
           "name": "variable.parameter.edk2_fdf",
-          "match": "[\\w/-]+\\.[a-zA-Z]+"
+          "match": "[\\w/-]+\\.[\\w]+"
         },
         {
           "name": "keyword.control.edk2_fdf",
