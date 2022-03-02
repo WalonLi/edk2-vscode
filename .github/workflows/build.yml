@@ -5,6 +5,7 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false # If one OS fails, still try the others
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
