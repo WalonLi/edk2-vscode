@@ -7,7 +7,9 @@ export function run(): Promise<void> {
 	const mocha = new Mocha({
 		ui: 'tdd',
 	});
-	mocha.useColors(true);
+
+	// TypeError: mocha.useColors is not a function
+	// mocha.useColors(true);
 
 	const testsRoot = path.resolve(__dirname, '..');
 
