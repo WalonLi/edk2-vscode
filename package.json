@@ -2,7 +2,7 @@
   "name": "edk2-vscode",
   "displayName": "edk2-vscode",
   "description": "",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "publisher": "walonli",
   "engines": {
     "vscode": "^1.37.0"

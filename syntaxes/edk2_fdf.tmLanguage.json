@@ -68,24 +68,12 @@
           ]
         },
         {
-          "begin": "\\<",
-          "end": "\\>",
-          "patterns": [
-            {
-              "name": "string.quoted.double.edk2_fdf",
-              "match": "[a-zA-Z0-9.]+"
-            }
-          ]
+          "name": "string.quoted.double.edk2_fdf",
+          "match": "(?<=<)[a-zA-Z0-9.]+(?=>)"
         },
         {
-          "begin": "\\$\\(",
-          "end": "\\)",
-          "patterns": [
-            {
-              "name": "support.function.edk2_fdf",
-              "match": "[a-zA-Z0-9_]+"
-            }
-          ]
+          "name": "support.function.edk2_fdf",
+          "match": "(?<=\\$\\()[a-zA-Z0-9_]+(?=\\))"
         },
         {
           "name": "comment.line.number-sign.edk2_fdf",
