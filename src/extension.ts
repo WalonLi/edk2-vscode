@@ -474,6 +474,66 @@ class Edk2DecSymbolProvider implements vscode.DocumentSymbolProvider {
 
 /*
 */
+class Edk2FdfSymbolProvider implements vscode.DocumentSymbolProvider {
+  public provideDocumentSymbols(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.DocumentSymbol[]> {
+
+    let keywords = new Map <string, vscode.SymbolKind>([
+      ['Section', vscode.SymbolKind.Variable]
+    ]);
+
+    return new Promise((resolve, reject) => {
+      let symbols: vscode.DocumentSymbol[] = [];
+      let nodes = [symbols];
+
+      for (let i = 0; i < document.lineCount; i++) {
+        let keyword_line = document.lineAt(i);
+        let keyword_text = Common.removeHashTagComment(keyword_line.text);
+
+        let m = 'Section';
+        if (m.length && keyword_text.match(/\[[\s\w.,]+\]/g)) {
+          let j;
+          let keyword_symbol = new vscode.DocumentSymbol(keyword_text, '', vscode.SymbolKind.Class, keyword_line.range, keyword_line.range);
+          
+          nodes[nodes.length-1].push(keyword_symbol);
+          nodes.push(keyword_symbol.children);
+
+          let element_line = keyword_line;
+          let pre_element_range_end = element_line.range.end;
+          for (j = i + 1; j < document.lineCount; j++, pre_element_range_end = element_line.range.end) {
+            element_line = document.lineAt(j);
+            let element_text = Common.removeHashTagComment(element_line.text).replace(/\|.*/g, '');
+
+            // skip empty line and control symbol
+            if (element_text.length === 0) {
+              continue;
+            }
+
+            // next keyword!
+            if (element_text[0] === '[') {
+              break;
+            }
+
+            // Only pop specific files
+            if (!element_text.match(/^(INF|FILE|\!include)[\w\s]+/g)) {
+              continue;
+            }
+
+            let symbol = new vscode.DocumentSymbol(element_text, '', keywords.get(m)!, element_line.range, element_line.range);
+            nodes[nodes.length-1].push(symbol);
+          }
+
+          keyword_symbol.range = new vscode.Range(keyword_symbol.range.start, pre_element_range_end);
+          nodes.pop();
+          i = j - 1;
+        }
+      }
+      resolve(symbols);
+    });
+  }
+}
+
+/*
+*/
 class Edk2InfSymbolProvider implements vscode.DocumentSymbolProvider {
   public provideDocumentSymbols(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.DocumentSymbol[]> {
 
@@ -576,6 +636,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   vscode.languages.registerDocumentSymbolProvider({ scheme: 'file', language: 'edk2_dsc' }, new Edk2DscSymbolProvider());
   vscode.languages.registerDocumentSymbolProvider({ scheme: 'file', language: 'edk2_dec' }, new Edk2DecSymbolProvider());
+  vscode.languages.registerDocumentSymbolProvider({ scheme: 'file', language: 'edk2_fdf' }, new Edk2FdfSymbolProvider());
   vscode.languages.registerDocumentSymbolProvider({ scheme: 'file', language: 'edk2_inf' }, new Edk2InfSymbolProvider());
 
   context.subscriptions.push(vscode.commands.registerCommand('extension.buildDsc', Common.buildDsc));

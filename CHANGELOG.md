@@ -4,6 +4,9 @@ All notable changes to the "edk2-vscode" extension will be documented in this fi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+> ### 1.0.8
+> 1. Fdf code outline
+
 > ### 1.0.7
 > 1. Bug fix
 > 2. Update known issue with gitlens
