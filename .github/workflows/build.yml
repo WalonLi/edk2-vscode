@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false # If one OS fails, still try the others
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest] # windows-latest is buggy currently, skip CI
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
