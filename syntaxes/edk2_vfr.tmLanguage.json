@@ -14,19 +14,31 @@
       "patterns": [
         {
           "name": "variable.language.edk2_vfr",
-          "match": "((?<!\\w)(endformset|formset|subtitle|title|class|subclass|help|varstore|efivarstore|name|classguid|guid|attribute|formid|form|prompt|flags|key|value|endform|text|label|string|questionid|write|set|cond|map))(?!\\w)"
+          "match": "((?<!\\w)(formsetguid|formsetid|title|class|subclass|help|varstore|efivarstore|namevaluevarstore|varsize|varstoredevice|name|classguid|guid|attribute|formid|formmap|prompt|flags|key|value|text|label|questionid|question|image|locked|write|read|set|cond|maptitle|refreshguid|mapguid|map|devicepath))(?!\\w)"
         },
         {
           "name": "variable.language.edk2_vfr",
-          "match": "((?<!\\w)(minsize|maxsize|endstring|numeric|endnumeric|step|minimum|maximum|oneof|endoneof|option|goto|varid|default|defaultstore|checkbox|endcheckbox|date|year|month|day|enddate|time|hour|minute|second|endtime|timeout))(?!\\w)"
+          "match": "((?<!\\w)(minsize|maxsize|step|minimum|maximum|option|goto|hidden|varid|default|defaultstore|year|month|day|hour|minute|second|timeout|maxcontainers|inventory|encoding|banner|align|left|right|center|line|config|refresh|interval|datatype|data|modal))(?!\\w)"
         },
         {
           "name": "variable.language.edk2_vfr",
-          "match": "((?<!\\w)(suppressif|grayoutif|warningif|inconsistentif|endif|ideqval|ideqvallist))(?!\\w)"
+          "match": "((?<!\\w)(endformset|formset|endform|form|endsubtitle|subtitle|endoneof|oneof|endlist|orderedlist|endcheckbox|checkbox|enddate|date|endguidop|guidop|endstring|string|endresetbutton|resetbutton|endnumeric|numeric|endtime|time|endpassword|password|endrule|rule|endaction|action))(?!\\w)"
+        },
+        {
+          "name": "variable.language.edk2_vfr",
+          "match": "((?<!\\w)(suppressif|grayoutif|warningif|disableif|inconsistentif|nosubmitif|endif))(?!\\w)"
+        },
+        {
+          "name": "variable.language.edk2_vfr",
+          "match": "((?<!\\w)(dup|vareqval|var|ideqvallist|ideqval|ideqid|questionref|questionrefval|ruleref|stringref|stringrefval|pushthis|security|get|length|boolval|stringval|unintval|toupper|tolower|match|match2|catenate))(?!\\w)"
         },
         {
           "name": "support.function.edk2_vfr",
-          "match": "((?<!\\w)(INTERACTIVE|DEFAULT|MANUFACTURING|RESET_REQUIRED|CHECKBOX_DEFAULT))(?!\\w)"
+          "match": "((?<!\\w)(INTERACTIVE|DEFAULT|MANUFACTURING|RESET_REQUIRED|CHECKBOX_DEFAULT|CHECKBOX_DEFAULT_MFG))(?!\\w)"
+        },
+        {
+          "name": "support.function.edk2_vfr",
+          "match": "((?<!\\w)(NON_DEVICE|DISK_DEVICE|VIDEO_DEVICE|NETWORK_DEVICE|INPUT_DEVICE|ONBOARD_DEVICE|OTHER_DEVICE|SETUP_APPLICATION|GENERAL_APPLICATION|FRONT_PAGE|SINGLE_USE))(?!\\w)"
         },
         {
           "name": "variable.parameter.edk2_vfr",
