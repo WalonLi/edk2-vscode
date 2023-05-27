@@ -2,7 +2,7 @@
   "name": "edk2-vscode",
   "displayName": "edk2-vscode",
   "description": "",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "publisher": "walonli",
   "engines": {
     "vscode": "^1.37.0"
@@ -190,22 +190,23 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/glob": "^7.1.1",
+    "@types/glob": "^7.2.0",
     "@types/mocha": "^5.2.6",
-    "@types/node": "^10.12.21",
+    "@types/node": "^10.17.60",
     "@types/vscode": "^1.37.0",
-    "glob": "^7.1.4",
-    "mocha": "^8.2.1",
-    "typescript": "^3.3.1",
-    "tslint": "^5.12.1",
-    "vscode-test": "^1.0.2"
+    "glob": "^7.2.3",
+    "mocha": "^10.2.0",
+    "tslint": "^5.20.1",
+    "vscode-test": "^1.6.1"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/WalonLi/edk2-vscode.git"
   },
   "dependencies": {
-    "open-file-explorer": "^1.0.2"
+    "markdown-it": "^13.0.1",
+    "open-file-explorer": "^1.0.2",
+    "vsce": "^2.15.0"
   },
   "homepage": "https://github.com/WalonLi/edk2-vscode/blob/master/README.md"
 }
