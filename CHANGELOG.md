@@ -4,13 +4,16 @@ All notable changes to the "edk2-vscode" extension will be documented in this fi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+> ### 1.0.9
+> 1. VFR syntax fix
+
 > ### 1.0.8
 > 1. Fdf code outline
 
 > ### 1.0.7
 > 1. Bug fix
 > 2. Update known issue with gitlens
-> 
+
 > ### 1.0.6
 > 1. New feature - add instance type in breadcrumbs
 > 2. Tune fdf syntaxt color

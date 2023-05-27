@@ -48,7 +48,7 @@ Functions       |How
 
 ```
 GNU GENERAL PUBLIC LICENSE
-Copyright (C) 2019-2022  WalonLi
+Copyright (C) 2019-2023  WalonLi
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
