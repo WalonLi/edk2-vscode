@@ -24,7 +24,8 @@
       {
         "id": "edk2_dsc",
         "extensions": [
-          ".dsc"
+          ".dsc",
+          ".dsc.inc"
         ],
         "configuration": "./confs/edk2_dsc.conf.json"
       },
@@ -38,7 +39,8 @@
       {
         "id": "edk2_fdf",
         "extensions": [
-          ".fdf"
+          ".fdf",
+          ".fdf.inc"
         ],
         "configuration": "./confs/edk2_fdf.conf.json"
       },
