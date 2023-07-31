@@ -4,8 +4,6 @@
     "body": [
       "/** @file    $TM_FILENAME",
       "",
-      "  Copyright (c) Microsoft Corporation. All rights reserved.",
-      " ",
       "**/",
       "",
       "#include <Library/GoogleTestLib.h>",
@@ -122,8 +120,6 @@
     "body": [
       "/** @file    $TM_FILENAME",
       "",
-      "  Copyright (c) Microsoft Corporation. All rights reserved.",
-      " ",
       "**/",
       "",
       "#ifndef MOCK_<LIB_NAME>_LIB_H_",
@@ -149,8 +145,6 @@
     "body": [
       "/** @file    $TM_FILENAME",
       "",
-      "  Copyright (c) Microsoft Corporation. All rights reserved.",
-      " ",
       "**/",
       "",
       "#include <GoogleTest/Library/$TM_FILENAME_BASE.h>",

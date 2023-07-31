@@ -23,8 +23,6 @@
     "prefix": "uefi-hfile",
     "body": [
       "/** @file    $TM_FILENAME",
-      "  ",
-      "  Copyright (c) Microsoft Corporation. All rights reserved.",
       "",
       "**/",
       "",
@@ -71,8 +69,6 @@
     "body": [
       "/** @file    $TM_FILENAME",
       "",
-      "  Copyright (c) Microsoft Corporation. All rights reserved.",
-      " ",
       "**/",
       "",
       "/* Includes */",
@@ -117,8 +113,6 @@
     "body": [
       "## @file    $TM_FILENAME",
       "#",
-      "#  Copyright (c) Microsoft Corporation. All rights reserved.",
-      "#",
       "#  Description",
       "#",
       "##",
@@ -154,8 +148,6 @@
     "body": [
       "## @file    $TM_FILENAME",
       "#",
-      "#  Copyright (c) Microsoft Corporation. All rights reserved.",
-      "#",
       "#  Description",
       "#",
       "##",
@@ -189,8 +181,6 @@
     "prefix": "uefi-inf-unit-test",
     "body": [
       "## @file    $TM_FILENAME",
-      "#",
-      "#  Copyright (c) Microsoft Corporation. All rights reserved.",
       "#",
       "#  Description",
       "#",
@@ -230,8 +220,6 @@
     "prefix": "uefi-dsc-host-unit-test",
     "body": [
       "## @file    $TM_FILENAME",
-      "#",
-      "#  Copyright (c) Microsoft Corporation. All rights reserved.",
       "#",
       "#  Description",
       "#",
