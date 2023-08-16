@@ -1,9 +1,4 @@
 {
-  "debug_snippet": {
-    "prefix": ["DEBUG", "debug", "Debug"],
-    "body": ["DEBUG ((DEBUG_ERROR, \"%a %d $0 \\n\", __FUNCTION__, __LINE__));"],
-    "description": "EDK2 debug snippet"
-  },
   "error_snippet": {
     "prefix": ["EFI_ERROR", "error"],
     "body": ["EFI_ERROR (${0:Status})"],

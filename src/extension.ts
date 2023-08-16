@@ -110,6 +110,19 @@ class Common {
       vscode.window.showInformationMessage('Not found in build - ' + inf);
     }
   }
+
+  static getDebugMessage (): string {
+    let config = vscode.workspace.getConfiguration('edk2-vscode');
+    let prefix = config.get('debug.prefix');
+    if (prefix !== '') {
+      prefix = prefix + ' ';
+    }
+    return 'DEBUG ((DEBUG_ERROR, \"' + prefix + '%a %d $0 \\n\", __FUNCTION__, __LINE__));';
+  }
+
+  static debugLogHotkey (textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit, ...args: any[]) {
+    return textEditor.insertSnippet(new vscode.SnippetString(Common.getDebugMessage()));
+  }
 }
 
 /*
@@ -607,6 +620,26 @@ class Edk2InfSymbolProvider implements vscode.DocumentSymbolProvider {
   }
 }
 
+class Edk2CCompletionItemProvider implements vscode.CompletionItemProvider {
+  public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
+    let message = Common.getDebugMessage();
+
+    let snippet1 = new vscode.CompletionItem('DEBUG', vscode.CompletionItemKind.Snippet);
+    snippet1.insertText = new vscode.SnippetString(message);
+    snippet1.documentation = new vscode.MarkdownString('EDK2 debug snippet');
+
+    let snippet2 = new vscode.CompletionItem('debug', vscode.CompletionItemKind.Snippet);
+    snippet2.insertText = new vscode.SnippetString(message);
+    snippet2.documentation = new vscode.MarkdownString('EDK2 debug snippet');
+
+    let snippet3 = new vscode.CompletionItem('Debug', vscode.CompletionItemKind.Snippet);
+    snippet3.insertText = new vscode.SnippetString(message);
+    snippet3.documentation = new vscode.MarkdownString('EDK2 debug snippet');
+
+    return [snippet1, snippet2, snippet3];
+  }
+}
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -639,8 +672,14 @@ export function activate(context: vscode.ExtensionContext) {
   vscode.languages.registerDocumentSymbolProvider({ scheme: 'file', language: 'edk2_fdf' }, new Edk2FdfSymbolProvider());
   vscode.languages.registerDocumentSymbolProvider({ scheme: 'file', language: 'edk2_inf' }, new Edk2InfSymbolProvider());
 
+  vscode.languages.registerCompletionItemProvider({ scheme: 'file', language: 'c'   }, new Edk2CCompletionItemProvider());
+  vscode.languages.registerCompletionItemProvider({ scheme: 'file', language: 'cpp' }, new Edk2CCompletionItemProvider());
+
+
   context.subscriptions.push(vscode.commands.registerCommand('extension.buildDsc', Common.buildDsc));
   context.subscriptions.push(vscode.commands.registerCommand('extension.goToBuild', Common.goToBuild));
+  context.subscriptions.push(vscode.commands.registerTextEditorCommand('extension.debugLogHotkey', Common.debugLogHotkey));
+
 }
 
 // this method is called when your extension is deactivated

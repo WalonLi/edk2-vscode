@@ -126,6 +126,10 @@
       {
         "command": "extension.goToBuild",
         "title": "Go to Build folder"
+      },
+      {
+        "command": "extension.debugLogHotkey",
+        "title": "Debug log hotkey"
       }
     ],
     "menus": {
@@ -153,12 +157,8 @@
     "keybindings": [
       {
         "key": "ctrl+f1",
-        "command": "editor.action.insertSnippet",
-        "when": "resourceLangId == c || resourceLangId == cpp",
-        "args": {
-          "langId": "c",
-          "name": "debug_snippet"
-        }
+        "command": "extension.debugLogHotkey",
+        "when": "resourceLangId == c || resourceLangId == cpp"
       }
     ],
     "configuration": {
@@ -188,6 +188,11 @@
           "type": "string",
           "default": "",
           "description": "Specific root paths for parsing associate files. i.e. aaa, bbb, ccc"
+        },
+        "edk2-vscode.debug.prefix": {
+          "type": "string",
+          "default": "",
+          "description": "Specific prefix of error message in DEBUG snippets, ex: DEBUG ((DEBUG_ERROR, \"prefix %a %d \\n\", __FUNCTION__, __LINE__));"
         }
       }
     }
