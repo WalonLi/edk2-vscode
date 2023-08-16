@@ -26,7 +26,7 @@ Extension       |Functions
 ## Snippet
 Name            |Alias
 ----------------|-------
-**DEBUG**       |DEBUG / debug / Debug / CTRL+F1
+**DEBUG**       |DEBUG / debug / Debug / CTRL+F1 (Prefix Customization Support)
 **ERROR**       |EFI_ERROR / error
 **NONE ERROR**  |!EFI_ERROR / !error
 **ASSERT**      |ASSERT / assert

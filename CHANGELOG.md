@@ -4,6 +4,12 @@ All notable changes to the "edk2-vscode" extension will be documented in this fi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+> ### 1.0.10
+> 1. CI fix
+> 2. Support *.fdf.inc and *.dsc.inc as edk2 practice
+> 3. Add snippets for GoogleTest framework
+> 4. Add new configuration for debug log customization
+
 > ### 1.0.9
 > 1. VFR syntax fix
 
