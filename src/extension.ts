@@ -362,8 +362,8 @@ class Edk2DscSymbolProvider implements vscode.DocumentSymbolProvider {
 
     let keywords = new Map <string, vscode.SymbolKind>([
       ['Pcd', vscode.SymbolKind.Variable],
-      ['Component', vscode.SymbolKind.File],
-      ['Library', vscode.SymbolKind.Package]
+      ['Component', vscode.SymbolKind.Field],
+      ['Library', vscode.SymbolKind.Constant]
     ]);
 
     return new Promise((resolve, reject) => {
@@ -432,10 +432,10 @@ class Edk2DecSymbolProvider implements vscode.DocumentSymbolProvider {
 
     let keywords = new Map <string, vscode.SymbolKind>([
       ['Pcd', vscode.SymbolKind.Variable],
-      ['Library', vscode.SymbolKind.Package],
-      ['Guids', vscode.SymbolKind.Interface],
-      ['Ppis', vscode.SymbolKind.Interface],
-      ['Protocols', vscode.SymbolKind.Interface],
+      ['Library', vscode.SymbolKind.Constant],
+      ['Guids', vscode.SymbolKind.EnumMember],
+      ['Ppis', vscode.SymbolKind.EnumMember],
+      ['Protocols', vscode.SymbolKind.EnumMember],
     ]);
 
     return new Promise((resolve, reject) => {
@@ -551,13 +551,13 @@ class Edk2InfSymbolProvider implements vscode.DocumentSymbolProvider {
   public provideDocumentSymbols(document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.DocumentSymbol[]> {
 
     let keywords = new Map <string, vscode.SymbolKind>([
-      ['Sources', vscode.SymbolKind.File],
-      ['Packages', vscode.SymbolKind.File],
+      ['Sources', vscode.SymbolKind.Field],
+      ['Packages', vscode.SymbolKind.Field],
       ['Pcd', vscode.SymbolKind.Variable],
-      ['Library', vscode.SymbolKind.Package],
-      ['Protocol', vscode.SymbolKind.Interface],
-      ['Ppi', vscode.SymbolKind.Interface],
-      ['Guid', vscode.SymbolKind.Interface],
+      ['Library', vscode.SymbolKind.Constant],
+      ['Protocol', vscode.SymbolKind.EnumMember],
+      ['Ppi', vscode.SymbolKind.EnumMember],
+      ['Guid', vscode.SymbolKind.EnumMember],
       ['Depex', vscode.SymbolKind.Operator],
     ]);
 
