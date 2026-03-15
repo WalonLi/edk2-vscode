@@ -4,6 +4,9 @@ All notable changes to the "edk2-vscode" extension will be documented in this fi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+> ### 1.0.11
+> 1. Fix conflict with gitlens
+
 > ### 1.0.10
 > 1. CI fix
 > 2. Support *.fdf.inc and *.dsc.inc as edk2 practice
