@@ -42,6 +42,10 @@ Functions       |How
 
 ![](demo/build_setting.jpg)
 
+## Known Issue
+1. Trigger git blame for each line with gitlens plugin. Suggest to disable two functions in gitlens 
+  `"gitlens.codeLens.authors.enabled": false` and `"gitlens.codeLens.recentChange.enabled": false'`
+
 ```
 GNU GENERAL PUBLIC LICENSE
 Copyright (C) 2019-2026  WalonLi
