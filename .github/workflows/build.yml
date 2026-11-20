@@ -11,13 +11,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v7
     - name: Install Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v7
       with:
-        node-version: 18.x
-    - run: npm install
-    - run: npm install -g typescript
+        node-version: 22.x
+    - run: npm ci
     - run: xvfb-run -a npm test
       if: runner.os == 'Linux'
     - run: npm test
