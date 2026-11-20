@@ -212,6 +212,7 @@
     "glob": "^7.2.3",
     "mocha": "^10.2.0",
     "tslint": "^5.20.1",
+    "typescript": "5.4.5",
     "vscode-test": "^1.6.1"
   },
   "repository": {
